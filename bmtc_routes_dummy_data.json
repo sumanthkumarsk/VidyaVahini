@@ -1,0 +1,139 @@
+{
+  "routes": {
+    "route_500d": {
+      "name": "500-D: Central Silk Board → Hebbal",
+      "stops": {
+        "stop_01": {
+          "name": "Central Silk Board",
+          "latitude": 12.9176,
+          "longitude": 77.6238,
+          "order": 1
+        },
+        "stop_02": {
+          "name": "HSR Layout",
+          "latitude": 12.9121,
+          "longitude": 77.6446,
+          "order": 2
+        },
+        "stop_03": {
+          "name": "Agara Junction",
+          "latitude": 12.9234,
+          "longitude": 77.6501,
+          "order": 3
+        },
+        "stop_04": {
+          "name": "Bellandur Gate",
+          "latitude": 12.9274,
+          "longitude": 77.6698,
+          "order": 4
+        },
+        "stop_05": {
+          "name": "Marathahalli Bridge",
+          "latitude": 12.9553,
+          "longitude": 77.6984,
+          "order": 5
+        },
+        "stop_06": {
+          "name": "Kalyan Nagar",
+          "latitude": 13.0280,
+          "longitude": 77.6399,
+          "order": 6
+        },
+        "stop_07": {
+          "name": "Hebbal",
+          "latitude": 13.0354,
+          "longitude": 77.5988,
+          "order": 7
+        }
+      }
+    },
+    "route_335e": {
+      "name": "335-E: Majestic → Kadugodi",
+      "stops": {
+        "stop_01": {
+          "name": "Majestic (KBS)",
+          "latitude": 12.9766,
+          "longitude": 77.5713,
+          "order": 1
+        },
+        "stop_02": {
+          "name": "Corporation Circle",
+          "latitude": 12.9664,
+          "longitude": 77.5872,
+          "order": 2
+        },
+        "stop_03": {
+          "name": "Domlur TTMC",
+          "latitude": 12.9609,
+          "longitude": 77.6385,
+          "order": 3
+        },
+        "stop_04": {
+          "name": "HAL Main Gate",
+          "latitude": 12.9575,
+          "longitude": 77.6635,
+          "order": 4
+        },
+        "stop_05": {
+          "name": "Kundalahalli Gate",
+          "latitude": 12.9654,
+          "longitude": 77.7188,
+          "order": 5
+        },
+        "stop_06": {
+          "name": "ITPL",
+          "latitude": 12.9863,
+          "longitude": 77.7373,
+          "order": 6
+        },
+        "stop_07": {
+          "name": "Kadugodi",
+          "latitude": 12.9984,
+          "longitude": 77.7610,
+          "order": 7
+        }
+      }
+    },
+    "route_kia8": {
+      "name": "KIA-8: Electronic City → KIAL Airport",
+      "stops": {
+        "stop_01": {
+          "name": "Electronic City",
+          "latitude": 12.8488,
+          "longitude": 77.6685,
+          "order": 1
+        },
+        "stop_02": {
+          "name": "Bommanahalli",
+          "latitude": 12.9022,
+          "longitude": 77.6241,
+          "order": 2
+        },
+        "stop_03": {
+          "name": "Silk Board",
+          "latitude": 12.9176,
+          "longitude": 77.6238,
+          "order": 3
+        },
+        "stop_04": {
+          "name": "Tin Factory",
+          "latitude": 12.9942,
+          "longitude": 77.6661,
+          "order": 4
+        },
+        "stop_05": {
+          "name": "Hebbal",
+          "latitude": 13.0354,
+          "longitude": 77.5988,
+          "order": 5
+        },
+        "stop_06": {
+          "name": "KIAL Airport",
+          "latitude": 13.1989,
+          "longitude": 77.7068,
+          "order": 6
+        }
+      }
+    }
+  }
+}

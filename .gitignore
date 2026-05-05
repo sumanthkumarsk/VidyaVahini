@@ -1,0 +1,22 @@
+# Secret files — NEVER commit these to GitHub
+local.properties
+google-services.json
+*.keystore
+*.jks
+
+# Build outputs
+/build
+/app/build
+*.apk
+*.aab
+*.dex
+
+# IDE files
+.idea/
+*.iml
+.gradle/
+captures/
+
+# OS files
+.DS_Store
+Thumbs.db

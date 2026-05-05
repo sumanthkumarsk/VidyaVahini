@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Navigation Graph — defines all screens and transitions -->
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <!-- ── Auth Flow ─────────────────────────────────────────────────────── -->
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.vidyavahini.app.ui.auth.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_login_to_otp"
+            app:destination="@id/otpFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/otpFragment"
+        android:name="com.vidyavahini.app.ui.auth.OtpFragment"
+        android:label="OTP Verification"
+        tools:layout="@layout/fragment_otp">
+
+        <action
+            android:id="@+id/action_otp_to_register"
+            app:destination="@id/registerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true"/>
+
+        <!-- Returning user → skip registration, go to home -->
+        <action
+            android:id="@+id/action_otp_to_home"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.vidyavahini.app.ui.auth.RegisterFragment"
+        android:label="Complete Profile"
+        tools:layout="@layout/fragment_register">
+
+        <action
+            android:id="@+id/action_register_to_home"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <!-- ── Main Flow ─────────────────────────────────────────────────────── -->
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.vidyavahini.app.ui.home.HomeFragment"
+        android:label="Vidya-Vahini"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_home_to_tracking"
+            app:destination="@id/trackingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/action_home_to_safe_reach"
+            app:destination="@id/safeReachFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+        <!-- Logout → go back to login, clearing all back stack -->
+        <action
+            android:id="@+id/action_home_to_login"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/trackingFragment"
+        android:name="com.vidyavahini.app.ui.tracking.TrackingFragment"
+        android:label="Live Route Map"
+        tools:layout="@layout/fragment_tracking"/>
+
+    <fragment
+        android:id="@+id/safeReachFragment"
+        android:name="com.vidyavahini.app.ui.safereach.SafeReachFragment"
+        android:label="Safe Reach"
+        tools:layout="@layout/fragment_safe_reach"/>
+
+</navigation>

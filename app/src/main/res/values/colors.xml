@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ── Primary Palette ──────────────────────────────────────────────── -->
+    <color name="primary_orange">#FF6D00</color>
+    <color name="primary_orange_dark">#E65100</color>
+    <color name="primary_orange_light">#FFAD42</color>
+
+    <color name="primary_blue">#1565C0</color>
+    <color name="primary_blue_dark">#003C8F</color>
+    <color name="primary_blue_light">#5E92F3</color>
+
+    <!-- ── Backgrounds ──────────────────────────────────────────────────── -->
+    <color name="bg_deep">#0A0E21</color>
+    <color name="bg_surface">#12172B</color>
+    <color name="bg_card">#1C2340</color>
+    <color name="bg_card_elevated">#232B4A</color>
+
+    <!-- ── Text ──────────────────────────────────────────────────────────── -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B0BEC5</color>
+    <color name="text_hint">#546E7A</color>
+
+    <!-- ── Status Colors ─────────────────────────────────────────────────── -->
+    <color name="status_on_time">#00C853</color>
+    <color name="status_arriving">#FF6D00</color>
+    <color name="status_soon">#FFD600</color>
+    <color name="status_passed">#F44336</color>
+
+    <!-- ── Breakdown / Alert ──────────────────────────────────────────────── -->
+    <color name="breakdown_bg">#3D0000</color>
+    <color name="breakdown_border">#F44336</color>
+
+    <!-- ── Material Component overrides ──────────────────────────────────── -->
+    <color name="colorPrimary">#FF6D00</color>
+    <color name="colorPrimaryVariant">#E65100</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorSecondary">#1565C0</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+    <color name="colorBackground">#0A0E21</color>
+    <color name="colorSurface">#12172B</color>
+    <color name="colorOnSurface">#FFFFFF</color>
+    <color name="colorError">#F44336</color>
+    <color name="colorOnError">#FFFFFF</color>
+</resources>

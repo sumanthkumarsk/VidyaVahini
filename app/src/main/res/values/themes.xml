@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ── Base application theme — dark navy + orange accent ──────────── -->
+    <style name="Theme.VidyaVahini" parent="Theme.Material3.Dark">
+        <item name="colorPrimary">@color/primary_orange</item>
+        <item name="colorPrimaryVariant">@color/primary_orange_dark</item>
+        <item name="colorOnPrimary">@color/text_primary</item>
+        <item name="colorSecondary">@color/primary_blue</item>
+        <item name="colorOnSecondary">@color/text_primary</item>
+        <item name="android:colorBackground">@color/bg_deep</item>
+        <item name="colorSurface">@color/bg_surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorError">@color/status_passed</item>
+        <item name="colorOnError">@color/text_primary</item>
+        <item name="android:statusBarColor">@color/bg_deep</item>
+        <item name="android:navigationBarColor">@color/bg_deep</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- ── Splash screen theme ──────────────────────────────────────────── -->
+    <style name="Theme.VidyaVahini.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/bg_deep</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_bus</item>
+        <item name="postSplashScreenTheme">@style/Theme.VidyaVahini</item>
+    </style>
+
+    <!-- ── Card style ───────────────────────────────────────────────────── -->
+    <style name="VidyaCard" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/bg_card</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="contentPadding">0dp</item>
+    </style>
+
+    <!-- ── Primary action button — orange, full-width ─────────────────── -->
+    <style name="VidyaButton.Primary" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/primary_orange</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="cornerRadius">14dp</item>
+        <item name="android:letterSpacing">0.03</item>
+    </style>
+
+    <!-- ── Outlined secondary button ─────────────────────────────────── -->
+    <style name="VidyaButton.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/primary_orange</item>
+        <item name="android:textColor">@color/primary_orange</item>
+        <item name="android:textSize">14sp</item>
+        <item name="cornerRadius">14dp</item>
+    </style>
+
+    <!-- ── PING button — large, prominent, animated ──────────────────── -->
+    <style name="VidyaButton.Ping" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/primary_orange</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="android:elevation">8dp</item>
+    </style>
+
+    <!-- ── Text Input Layout ─────────────────────────────────────────── -->
+    <style name="VidyaTextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/primary_orange</item>
+        <item name="hintTextColor">@color/primary_orange</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+    </style>
+
+    <!-- ── Breakdown card — red danger style ─────────────────────────── -->
+    <style name="VidyaCard.Breakdown" parent="VidyaCard">
+        <item name="cardBackgroundColor">@color/breakdown_bg</item>
+        <item name="strokeColor">@color/breakdown_border</item>
+        <item name="strokeWidth">2dp</item>
+    </style>
+
+</resources>

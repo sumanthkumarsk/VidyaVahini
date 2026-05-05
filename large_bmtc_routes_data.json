@@ -1,0 +1,132 @@
+{
+  "routes": {
+    "route_500d": {
+      "name": "500-D: Central Silk Board → Hebbal",
+      "stops": {
+        "stop_01": { "name": "Central Silk Board", "lat": 12.9176, "lng": 77.6238, "order": 1 },
+        "stop_02": { "name": "HSR Layout", "lat": 12.9121, "lng": 77.6446, "order": 2 },
+        "stop_03": { "name": "Agara Junction", "lat": 12.9234, "lng": 77.6501, "order": 3 },
+        "stop_04": { "name": "Bellandur Gate", "lat": 12.9274, "lng": 77.6698, "order": 4 },
+        "stop_05": { "name": "Karmelaram Cross", "lat": 12.9354, "lng": 77.6835, "order": 5 },
+        "stop_06": { "name": "Marathahalli Bridge", "lat": 12.9553, "lng": 77.6984, "order": 6 },
+        "stop_07": { "name": "Karthik Nagar", "lat": 12.9712, "lng": 77.6953, "order": 7 },
+        "stop_08": { "name": "Mahadevapura", "lat": 12.9882, "lng": 77.6841, "order": 8 },
+        "stop_09": { "name": "Tin Factory", "lat": 12.9942, "lng": 77.6661, "order": 9 },
+        "stop_10": { "name": "Kasturinagar", "lat": 13.0039, "lng": 77.6521, "order": 10 },
+        "stop_11": { "name": "Kalyan Nagar", "lat": 13.0280, "lng": 77.6399, "order": 11 },
+        "stop_12": { "name": "Hebbal", "lat": 13.0354, "lng": 77.5988, "order": 12 }
+      }
+    },
+    "route_335e": {
+      "name": "335-E: Majestic (KBS) → Kadugodi",
+      "stops": {
+        "stop_01": { "name": "Majestic (KBS)", "lat": 12.9766, "lng": 77.5713, "order": 1 },
+        "stop_02": { "name": "Corporation Circle", "lat": 12.9664, "lng": 77.5872, "order": 2 },
+        "stop_03": { "name": "Richmond Circle", "lat": 12.9632, "lng": 77.5968, "order": 3 },
+        "stop_04": { "name": "Mayo Hall", "lat": 12.9723, "lng": 77.6083, "order": 4 },
+        "stop_05": { "name": "Domlur TTMC", "lat": 12.9609, "lng": 77.6385, "order": 5 },
+        "stop_06": { "name": "Manipal Hospital", "lat": 12.9587, "lng": 77.6441, "order": 6 },
+        "stop_07": { "name": "HAL Main Gate", "lat": 12.9575, "lng": 77.6635, "order": 7 },
+        "stop_08": { "name": "Marathahalli", "lat": 12.9553, "lng": 77.6984, "order": 8 },
+        "stop_09": { "name": "Kundalahalli Gate", "lat": 12.9654, "lng": 77.7188, "order": 9 },
+        "stop_10": { "name": "ITPL", "lat": 12.9863, "lng": 77.7373, "order": 10 },
+        "stop_11": { "name": "Hope Farm", "lat": 12.9850, "lng": 77.7502, "order": 11 },
+        "stop_12": { "name": "Kadugodi", "lat": 12.9984, "lng": 77.7610, "order": 12 }
+      }
+    },
+    "route_kia8": {
+      "name": "KIA-8: Electronic City → KIAL Airport",
+      "stops": {
+        "stop_01": { "name": "Electronic City", "lat": 12.8488, "lng": 77.6685, "order": 1 },
+        "stop_02": { "name": "Veerasandra", "lat": 12.8596, "lng": 77.6633, "order": 2 },
+        "stop_03": { "name": "Koodlu Gate", "lat": 12.8878, "lng": 77.6402, "order": 3 },
+        "stop_04": { "name": "Bommanahalli", "lat": 12.9022, "lng": 77.6241, "order": 4 },
+        "stop_05": { "name": "Silk Board", "lat": 12.9176, "lng": 77.6238, "order": 5 },
+        "stop_06": { "name": "Tin Factory", "lat": 12.9942, "lng": 77.6661, "order": 6 },
+        "stop_07": { "name": "Kalyan Nagar", "lat": 13.0280, "lng": 77.6399, "order": 7 },
+        "stop_08": { "name": "Hebbal", "lat": 13.0354, "lng": 77.5988, "order": 8 },
+        "stop_09": { "name": "Yelahanka Bypass", "lat": 13.1008, "lng": 77.5963, "order": 9 },
+        "stop_10": { "name": "Trumpet Intersection", "lat": 13.2384, "lng": 77.6457, "order": 10 },
+        "stop_11": { "name": "KIAL Airport", "lat": 13.1989, "lng": 77.7068, "order": 11 }
+      }
+    },
+    "route_201": {
+      "name": "201: Srinagar → Domlur",
+      "stops": {
+        "stop_01": { "name": "Srinagar", "lat": 12.9463, "lng": 77.5501, "order": 1 },
+        "stop_02": { "name": "Hanumanthanagar", "lat": 12.9431, "lng": 77.5543, "order": 2 },
+        "stop_03": { "name": "Basavanagudi", "lat": 12.9406, "lng": 77.5738, "order": 3 },
+        "stop_04": { "name": "Jayanagar 4th Block", "lat": 12.9298, "lng": 77.5833, "order": 4 },
+        "stop_05": { "name": "Madiwala", "lat": 12.9226, "lng": 77.6174, "order": 5 },
+        "stop_06": { "name": "Koramangala", "lat": 12.9352, "lng": 77.6245, "order": 6 },
+        "stop_07": { "name": "Domlur", "lat": 12.9609, "lng": 77.6385, "order": 7 }
+      }
+    },
+    "route_600": {
+      "name": "600: Banashankari → Electronic City",
+      "stops": {
+        "stop_01": { "name": "Banashankari TTMC", "lat": 12.9181, "lng": 77.5738, "order": 1 },
+        "stop_02": { "name": "Sangam Circle", "lat": 12.9135, "lng": 77.5843, "order": 2 },
+        "stop_03": { "name": "BTM Layout", "lat": 12.9165, "lng": 77.6101, "order": 3 },
+        "stop_04": { "name": "Silk Board", "lat": 12.9176, "lng": 77.6238, "order": 4 },
+        "stop_05": { "name": "Bommanahalli", "lat": 12.9022, "lng": 77.6241, "order": 5 },
+        "stop_06": { "name": "Garvebhavipalya", "lat": 12.8943, "lng": 77.6312, "order": 6 },
+        "stop_07": { "name": "Electronic City", "lat": 12.8488, "lng": 77.6685, "order": 7 }
+      }
+    },
+    "route_kia9": {
+      "name": "KIA-9: Majestic → KIAL Airport",
+      "stops": {
+        "stop_01": { "name": "Majestic (KBS)", "lat": 12.9766, "lng": 77.5713, "order": 1 },
+        "stop_02": { "name": "Malleswaram", "lat": 13.0034, "lng": 77.5701, "order": 2 },
+        "stop_03": { "name": "Mekhri Circle", "lat": 13.0142, "lng": 77.5815, "order": 3 },
+        "stop_04": { "name": "Hebbal", "lat": 13.0354, "lng": 77.5988, "order": 4 },
+        "stop_05": { "name": "Yelahanka", "lat": 13.1008, "lng": 77.5963, "order": 5 },
+        "stop_06": { "name": "KIAL Airport", "lat": 13.1989, "lng": 77.7068, "order": 6 }
+      }
+    },
+    "route_276": {
+      "name": "276: Majestic → Vidyaranyapura",
+      "stops": {
+        "stop_01": { "name": "Majestic (KBS)", "lat": 12.9766, "lng": 77.5713, "order": 1 },
+        "stop_02": { "name": "Malleshwaram 8th Cross", "lat": 13.0019, "lng": 77.5716, "order": 2 },
+        "stop_03": { "name": "Yeshwanthpur", "lat": 13.0285, "lng": 77.5409, "order": 3 },
+        "stop_04": { "name": "BEL Circle", "lat": 13.0423, "lng": 77.5592, "order": 4 },
+        "stop_05": { "name": "Vidyaranyapura", "lat": 13.0780, "lng": 77.5562, "order": 5 }
+      }
+    },
+    "route_317": {
+      "name": "317: Majestic → Hoskote",
+      "stops": {
+        "stop_01": { "name": "Majestic (KBS)", "lat": 12.9766, "lng": 77.5713, "order": 1 },
+        "stop_02": { "name": "Halasuru", "lat": 12.9763, "lng": 77.6253, "order": 2 },
+        "stop_03": { "name": "Tin Factory", "lat": 12.9942, "lng": 77.6661, "order": 3 },
+        "stop_04": { "name": "KR Puram", "lat": 13.0068, "lng": 77.6974, "order": 4 },
+        "stop_05": { "name": "Hoskote", "lat": 13.0716, "lng": 77.7960, "order": 5 }
+      }
+    },
+    "route_v_410": {
+      "name": "410: Jalahalli Cross → Bommanahalli",
+      "stops": {
+        "stop_01": { "name": "Jalahalli Cross", "lat": 13.0471, "lng": 77.5259, "order": 1 },
+        "stop_02": { "name": "Goraguntepalya", "lat": 13.0298, "lng": 77.5401, "order": 2 },
+        "stop_03": { "name": "Yeshwanthpur", "lat": 13.0285, "lng": 77.5409, "order": 3 },
+        "stop_04": { "name": "Nagarbhavi", "lat": 12.9557, "lng": 77.5115, "order": 4 },
+        "stop_05": { "name": "Nayandahalli", "lat": 12.9436, "lng": 77.5222, "order": 5 },
+        "stop_06": { "name": "Banashankari", "lat": 12.9181, "lng": 77.5738, "order": 6 },
+        "stop_07": { "name": "BTM Layout", "lat": 12.9165, "lng": 77.6101, "order": 7 },
+        "stop_08": { "name": "Bommanahalli", "lat": 12.9022, "lng": 77.6241, "order": 8 }
+      }
+    },
+    "route_g3": {
+      "name": "G-3: Brigade Road → Electronic City",
+      "stops": {
+        "stop_01": { "name": "Brigade Road", "lat": 12.9734, "lng": 77.6074, "order": 1 },
+        "stop_02": { "name": "Hosmat Hospital", "lat": 12.9669, "lng": 77.6163, "order": 2 },
+        "stop_03": { "name": "Madiwala", "lat": 12.9226, "lng": 77.6174, "order": 3 },
+        "stop_04": { "name": "Silk Board", "lat": 12.9176, "lng": 77.6238, "order": 4 },
+        "stop_05": { "name": "Electronic City", "lat": 12.8488, "lng": 77.6685, "order": 5 }
+      }
+    }
+  }
+}
