@@ -28,6 +28,9 @@ import com.vidyavahini.app.utils.NotificationHelper
  * 1. Writes to Firebase safereach/{uid} → triggers FCM notification to parent's app
  * 2. Sends an SMS via Android SmsManager — free, works for feature-phone parents
  */
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class SafeReachFragment : Fragment() {
 
     private var _binding: FragmentSafeReachBinding? = null

@@ -1,54 +1,41 @@
-# Vidya-Vahini Project Status & Handoff
+# Vidya-Vahini Project Status & Handoff (v2.0 - Professional Architecture)
 
 ## 📌 Project Overview
-**Vidya-Vahini** is an Android application designed for rural students to crowdsource real-time bus tracking. The application is fully built according to the specifications in `plan.md`.
+**Vidya-Vahini** is transitioning to a **Professional Grade Android Application** according to the newly defined `plan.md`. The project is being upgraded to utilize Clean Architecture, Hilt DI, Material Design 3, Lottie animations, Shimmer loading, and robust Authentication.
 
-## ✅ What Has Been Implemented
+## ✅ What Has Been Implemented (Phase 1)
 
 ### 1. Build & Architecture Setup
-- **Gradle Configuration**: Configured `build.gradle.kts` (Project & App levels), `settings.gradle.kts`, and `gradle-wrapper.properties`.
-- **Dependencies**: Added all required dependencies (Firebase BoM, Google Maps SDK, Lifecycle, Navigation Component, Material 3, Coroutines).
-- **ProGuard**: Added specific `proguard-rules.pro` to ensure Firebase and Navigation components work correctly after minification.
-- **Manifest**: Set up `AndroidManifest.xml` with required permissions (`INTERNET`, `SEND_SMS`, `POST_NOTIFICATIONS`) and injected Maps API key metadata.
+- **Gradle & Dependencies**: Updated `build.gradle.kts` to target Java 17. Integrated modern UI libraries including Lottie, Shimmer, Glide, ViewPager2, SwipeRefreshLayout, and Google Sign-In.
+- **Dependency Injection**: Integrated **Hilt/Dagger**. Annotated `MyApplication` with `@HiltAndroidApp` and all major fragments with `@AndroidEntryPoint`. Created `AppModule.kt` for centralized Firebase instances.
 
-### 2. Core Logic & Architecture (MVVM)
-- **Data Models**: Created clean Kotlin data classes (`Student.kt`, `Route.kt`, `Stop.kt`, `BusPing.kt`, `Breakdown.kt`).
-- **Firebase Integration**: 
-  - `MyApplication.kt`: Configured `setPersistenceEnabled(true)` for 2G offline resilience.
-  - `FirebaseRepository.kt`: Centralized repository handling all Firebase Realtime Database reads/writes/listeners and Firebase Auth calls.
-- **ViewModels**:
-  - `AuthViewModel.kt`: Manages Firebase Phone Authentication states (Loading, Sent, Verified, Error).
-  - `TrackingViewModel.kt`: Handles live ping listening, breakdown state, and triggers ETA recalculations.
-- **Utilities**: 
-  - `ETACalculator.kt`: Pure Kotlin utility calculating ETA based on bus position and average stop times.
-  - `NotificationHelper.kt` & `VidyaFirebaseMessagingService.kt`: Handles local foreground notifications, breakdown alerts, and background FCM pushes.
+### 2. UI/UX Foundation (Material 3)
+- **Design System**: Re-architected `colors.xml` and `themes.xml` for Deep Transit Blue and Vibrant Amber. Added full **Dark Mode** support (`values-night`).
+- **Splash Screen**: Migrated to the modern Android 12+ `core-splashscreen` API in `MainActivity`. Added custom `ic_bus_splash` vector drawable.
+- **Navigation Flow**: Rewrote `nav_graph.xml` to support the new flow:
+  `Welcome (Onboarding)` → `Sign In` ↔ `Sign Up` → `Profile Setup` → `Home`
 
-### 3. User Interface (Material Design 3)
-- **Themes & Styling**: Established a premium dark mode UI (`bg_deep: #0A0E21`, `primary_orange: #FF6D00`) in `colors.xml` and `themes.xml`.
-- **Navigation**: Implemented single-activity architecture (`MainActivity.kt`) using `nav_graph.xml` with custom slide animations.
-- **Fragments**:
-  - `LoginFragment` & `OtpFragment`: Beautiful authentication flow.
-  - `RegisterFragment`: Profile setup with dynamic dropdowns loaded from Firebase routes.
-  - `HomeFragment`: The main dashboard featuring an animated "PING BUS" button, live ETA card, last ping details, and breakdown alerts.
-  - `TrackingFragment`: Google Maps integration drawing the blue route polyline, stop markers, and a live updating orange bus marker.
-  - `SafeReachFragment`: Safety screen that triggers both an FCM notification and a direct fallback SMS to parents.
-- **Drawables & Animations**: Created custom vector icons (bus logo, OTP lock, school) and smooth interactive animations (pulse, bounce, slide transitions).
+### 3. Screen Scaffolding
+- **Onboarding**: Created `OnboardingFragment` and `fragment_onboarding.xml` with ViewPager2 structure ready for carousel slides.
+- **Authentication**: Stubbed `SignInFragment` with fully styled Material 3 `TextInputLayouts` and `SignUpFragment`.
+- **Profile**: Stubbed `ProfileSetupFragment` to ensure the new navigation graph resolves cleanly.
 
-## 🚀 Next Steps / Pending Items
-The codebase is 100% complete. However, the app requires the following environment configurations to compile and run successfully:
+### 4. Code Robustness
+- **Exception Handling**: Added try-catch fallbacks in `MainActivity.kt` to ensure safe routing if `SharedPreferences` or `FirebaseAuth` fails during initialization.
+- **MyApplication**: Added exception handling around Firebase offline persistence configuration to prevent crashes on initial DB lock.
 
-1. **Google Maps API Key**:
-   - Generate an Android-restricted Maps SDK API Key in the Google Cloud Console.
-   - Paste it into `local.properties` as `MAPS_API_KEY=your_key_here`.
+## 🚀 Next Steps / Pending Items (Phase 2)
 
-2. **Firebase Configuration**:
-   - Create a Firebase project ("vidya-vahini").
-   - Enable **Phone Authentication** and **Realtime Database** (Start in Test Mode).
-   - Register the Android app (`com.vidyavahini.app`) and provide your machine's `SHA-1` fingerprint.
-   - Download the actual `google-services.json` file and overwrite the placeholder in the `app/` directory.
+The architectural foundation is complete. To proceed with the plan:
 
-3. **Database Population**:
-   - Manually insert the initial route schema into the Firebase Realtime Database (as defined in `plan.md`) so the app has data to display on the Registration and Home screens.
-
-4. **Testing**:
-   - Run the app on an emulator (Note: SMS/OTP testing usually requires a physical device unless test phone numbers are added in Firebase Console).
+1. **Authentication Logic**:
+   - Implement Firebase Email/Password Auth in `SignInFragment` and `SignUpFragment`.
+   - Setup Google Sign-In one-tap flow.
+2. **Onboarding Content**:
+   - Create the 3 Lottie-powered carousel slides for `OnboardingFragment`.
+3. **Clean Architecture Repositories**:
+   - Move Firebase logic out of the UI into `domain/usecase` and `data/repository`.
+4. **Shimmer & UI Polish**:
+   - Implement Shimmer loading skeletons in `HomeFragment` and replace the placeholder text with actual Firebase data flows.
+5. **Data Population**:
+   - Run the Python scripts to pre-seed the 50 BMTC routes into the Firebase Realtime DB.

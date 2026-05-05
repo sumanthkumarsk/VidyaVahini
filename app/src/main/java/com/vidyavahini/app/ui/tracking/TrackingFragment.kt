@@ -32,6 +32,9 @@ import com.vidyavahini.app.viewmodel.TrackingViewModel
  * Shows the full route polyline, stop markers, live bus position, and ETA info.
  * Uses a dark map style to match the app's premium dark theme.
  */
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class TrackingFragment : Fragment(), OnMapReadyCallback {
 
     private var _binding: FragmentTrackingBinding? = null

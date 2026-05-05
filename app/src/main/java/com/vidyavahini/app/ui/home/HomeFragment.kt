@@ -27,11 +27,14 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+import dagger.hilt.android.AndroidEntryPoint
+
 /**
  * HomeFragment — the primary dashboard.
  * Shows: route name, last ping info, ETA, PING button, breakdown button, nav actions.
  * This is the screen students use 90% of the time.
  */
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null

@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.vidyavahini.app.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * MainActivity — single-activity host for the Navigation component.
@@ -17,6 +18,7 @@ import com.vidyavahini.app.databinding.ActivityMainBinding
  *  - User logged in + no profile  → RegisterFragment
  *  - User not logged in           → LoginFragment
  */
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -35,19 +37,27 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Route to the appropriate screen based on auth + profile state
-        val graph = navController.navInflater.inflate(R.navigation.nav_graph)
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        val prefs       = getSharedPreferences("vidya", MODE_PRIVATE)
-        val hasProfile  = !prefs.getString("name", null).isNullOrEmpty()
+        try {
+            // Route to the appropriate screen based on auth + profile state
+            val graph = navController.navInflater.inflate(R.navigation.nav_graph)
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            val prefs       = getSharedPreferences("vidya", MODE_PRIVATE)
+            val hasProfile  = !prefs.getString("name", null).isNullOrEmpty()
 
-        val startDest = when {
-            currentUser != null && hasProfile  -> R.id.homeFragment
-            currentUser != null && !hasProfile -> R.id.registerFragment
-            else                               -> R.id.loginFragment
+            val startDest = when {
+                currentUser != null && hasProfile  -> R.id.homeFragment
+                currentUser != null && !hasProfile -> R.id.profileSetupFragment
+                else                               -> R.id.onboardingFragment
+            }
+            graph.setStartDestination(startDest)
+            navController.graph = graph
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Fallback to onboarding if anything goes wrong with nav graph injection or Firebase
+            val fallbackGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+            fallbackGraph.setStartDestination(R.id.onboardingFragment)
+            navController.graph = fallbackGraph
         }
-        graph.setStartDestination(startDest)
-        navController.graph = graph
     }
 
     override fun onSupportNavigateUp(): Boolean {

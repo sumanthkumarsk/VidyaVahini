@@ -1,110 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Navigation Graph — defines all screens and transitions -->
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/onboardingFragment">
 
-    <!-- ── Auth Flow ─────────────────────────────────────────────────────── -->
-
+    <!-- Onboarding -->
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.vidyavahini.app.ui.auth.LoginFragment"
-        android:label="Login"
-        tools:layout="@layout/fragment_login">
-
+        android:id="@+id/onboardingFragment"
+        android:name="com.vidyavahini.app.ui.onboarding.OnboardingFragment"
+        android:label="Welcome">
         <action
-            android:id="@+id/action_login_to_otp"
-            app:destination="@id/otpFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            android:id="@+id/action_onboarding_to_signIn"
+            app:destination="@id/signInFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"/>
     </fragment>
 
+    <!-- Sign In -->
     <fragment
-        android:id="@+id/otpFragment"
-        android:name="com.vidyavahini.app.ui.auth.OtpFragment"
-        android:label="OTP Verification"
-        tools:layout="@layout/fragment_otp">
-
+        android:id="@+id/signInFragment"
+        android:name="com.vidyavahini.app.ui.auth.SignInFragment"
+        android:label="Sign In">
         <action
-            android:id="@+id/action_otp_to_register"
-            app:destination="@id/registerFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true"/>
-
-        <!-- Returning user → skip registration, go to home -->
+            android:id="@+id/action_signIn_to_signUp"
+            app:destination="@id/signUpFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
         <action
-            android:id="@+id/action_otp_to_home"
+            android:id="@+id/action_signIn_to_home"
             app:destination="@id/homeFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popUpTo="@id/loginFragment"
+            app:popUpTo="@id/signInFragment"
             app:popUpToInclusive="true"/>
     </fragment>
 
+    <!-- Sign Up -->
     <fragment
-        android:id="@+id/registerFragment"
-        android:name="com.vidyavahini.app.ui.auth.RegisterFragment"
-        android:label="Complete Profile"
-        tools:layout="@layout/fragment_register">
-
+        android:id="@+id/signUpFragment"
+        android:name="com.vidyavahini.app.ui.auth.SignUpFragment"
+        android:label="Sign Up">
         <action
-            android:id="@+id/action_register_to_home"
+            android:id="@+id/action_signUp_to_profileSetup"
+            app:destination="@id/profileSetupFragment"
+            app:popUpTo="@id/signInFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <!-- Profile Setup -->
+    <fragment
+        android:id="@+id/profileSetupFragment"
+        android:name="com.vidyavahini.app.ui.setup.ProfileSetupFragment"
+        android:label="Complete Profile">
+        <action
+            android:id="@+id/action_profileSetup_to_home"
             app:destination="@id/homeFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-
-    <!-- ── Main Flow ─────────────────────────────────────────────────────── -->
-
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.vidyavahini.app.ui.home.HomeFragment"
-        android:label="Vidya-Vahini"
-        tools:layout="@layout/fragment_home">
-
-        <action
-            android:id="@+id/action_home_to_tracking"
-            app:destination="@id/trackingFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-
-        <action
-            android:id="@+id/action_home_to_safe_reach"
-            app:destination="@id/safeReachFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-
-        <!-- Logout → go back to login, clearing all back stack -->
-        <action
-            android:id="@+id/action_home_to_login"
-            app:destination="@id/loginFragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true"/>
     </fragment>
 
+    <!-- Home (Bottom Nav Host Placeholder) -->
     <fragment
-        android:id="@+id/trackingFragment"
-        android:name="com.vidyavahini.app.ui.tracking.TrackingFragment"
-        android:label="Live Route Map"
-        tools:layout="@layout/fragment_tracking"/>
-
-    <fragment
-        android:id="@+id/safeReachFragment"
-        android:name="com.vidyavahini.app.ui.safereach.SafeReachFragment"
-        android:label="Safe Reach"
-        tools:layout="@layout/fragment_safe_reach"/>
+        android:id="@+id/homeFragment"
+        android:name="com.vidyavahini.app.ui.home.HomeFragment"
+        android:label="Vidya-Vahini" />
 
 </navigation>

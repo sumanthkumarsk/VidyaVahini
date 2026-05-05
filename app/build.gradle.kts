@@ -5,6 +5,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
+    id("com.google.dagger.hilt.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -42,12 +44,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }
 
@@ -84,6 +86,20 @@ dependencies {
 
     // ── Splash Screen ─────────────────────────────────────────────────────────
     implementation("androidx.core:core-splashscreen:1.0.1")
+
+    // ── Google Sign-In ────────────────────────────────────────────────────────
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
+
+    // ── Hilt DI ───────────────────────────────────────────────────────────────
+    implementation("com.google.dagger:hilt-android:2.51")
+    kapt("com.google.dagger:hilt-compiler:2.51")
+
+    // ── UI Enhancements ───────────────────────────────────────────────────────
+    implementation("com.airbnb.android:lottie:6.4.0")
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     // ── Testing ───────────────────────────────────────────────────────────────
     testImplementation("junit:junit:4.13.2")

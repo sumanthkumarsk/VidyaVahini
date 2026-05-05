@@ -1,193 +1,488 @@
-# 🚌 Vidya-Vahini — Complete Project Plan (Validated)
-### Android App Development using GenAI | Project #101
-### Language: Kotlin | IDE: Android Studio | All Free Tier
+﻿# 🚌 Vidya-Vahini — Professional Project Plan
+### Android App | Kotlin + Jetpack Compose | Material Design 3
+### Project #101 — MindMatrix Internship
 
 ---
 
-## 📌 Project Summary
+## 📌 Project Vision
 
-**Vidya-Vahini** is a crowdsourced, real-time bus tracking app for rural students.
-- A student spots the bus → taps **PING** → every student on that route instantly sees the update + ETA
-- Think **"Waze for Rural Students"** — no GPS hardware needed, runs on budget phones, works on 2G
+**Vidya-Vahini** is a professional-grade, crowdsourced real-time BMTC bus tracking app for Bangalore students. Built with modern Android architecture (MVVM + Clean Architecture), stunning Material Design 3 UI with Lottie animations, and robust offline-first capabilities.
 
----
+**Tagline:** *"Your Campus Commute, Reimagined"*
 
-## 🛠️ Complete Tech Stack (100% Free Tier)
+### What Makes This Professional
 
-| Layer | Tool | Free Limit | Why This Tool |
-|---|---|---|---|
-| IDE | Android Studio Ladybug | Unlimited | Official Android IDE |
-| Language | Kotlin | Unlimited | Modern, concise, null-safe |
-| Auth | Firebase Authentication | 10,000 users/month | Phone OTP — no email needed |
-| Database | Firebase Realtime Database | 1 GB storage, 10 GB/month | Push updates in < 2 seconds |
-| Notifications | Firebase Cloud Messaging (FCM) | Unlimited messages | Free push to all route users |
-| Maps | Google Maps SDK for Android | $200 credit/month | Official Android map SDK |
-| SMS Fallback | Android SmsManager (built-in) | Free — uses device SIM | For non-smartphone parents |
-| Version Control | GitHub | Unlimited public repos | Code backup + collaboration |
-
-### Firebase Scale Math (Free Tier Validated)
-```
-100 students x 1 ping every 12 min x 200 bytes per ping
-= ~100 pings/hour x 200 bytes
-= 20,000 bytes/hour = 0.02 MB/hour
-= ~14 MB/month used
-
-Firebase free limit = 10 GB/month transfer
-You are using 0.14% of your free quota. Completely safe.
-```
+| Aspect | Old Plan (Basic) | New Plan (Professional) |
+|--------|-----------------|------------------------|
+| Auth | Phone OTP only, no sign-in | Email + Password Sign Up & Sign In, Google Sign-In |
+| UI | Basic LinearLayouts | Material 3, Lottie animations, Dark Mode, Shimmer loading |
+| Onboarding | Ask destination during register | Beautiful 3-step onboarding with pre-loaded BMTC demo data |
+| Architecture | Basic MVVM | Clean Architecture + Repository + UseCases + Hilt DI |
+| Data | Manual Firebase entry | Pre-seeded 50+ real BMTC routes with realistic stops |
+| Navigation | Basic fragments | Bottom Navigation + Shared Element Transitions |
+| UX | Minimal | Haptic feedback, pull-to-refresh, skeleton screens, toasts |
+| Offline | Basic persistence | Full offline mode with sync indicators |
 
 ---
 
-## 🔑 API Keys & Configuration — Step by Step
+## 🌟 Complete Feature List
 
-### Step 1: Firebase Setup
-> URL: https://console.firebase.google.com
+### 1. 🔐 Authentication System (Professional)
+- **Sign Up** with Email + Password (Firebase Auth)
+- **Sign In** with Email + Password
+- **Google Sign-In** (one-tap)
+- **Forgot Password** with email reset link
+- **Auto Sign-In** — remembers logged-in users
+- **Form Validation** — real-time email format, password strength indicator
+- **Error Handling** — user-friendly error messages (not Firebase codes)
+- **Smooth Transitions** between Sign In ↔ Sign Up screens
 
+### 2. 🎨 Onboarding & Profile Setup
+- **Animated Splash Screen** with Lottie bus animation (2 seconds)
+- **3-Screen Onboarding Carousel** (skip option):
+  - Screen 1: "Track Your Bus in Real-Time" 
+  - Screen 2: "Crowdsourced — Students Help Students"
+  - Screen 3: "Safe Reach Alerts for Parents"
+- **Profile Setup** (after first sign-up only):
+  - Enter Name
+  - Select College (dropdown with search)
+  - Select Bus Route (auto-populated from BMTC demo data)
+  - Select Boarding Stop (filtered by selected route)
+  - Add Parent's Phone (optional, for Safe Reach SMS)
+- **Skip & Complete Later** option for profile
+
+### 3. 🏠 Home Dashboard
+- **Greeting Card** — "Good Morning, Priya!" with time-based greeting
+- **Live Bus Status Card** — animated pulse when bus is recently pinged
+- **ETA Countdown Timer** — real-time countdown with progress ring animation
+- **Quick Action Buttons:**
+  - 🔔 PING BUS (large, prominent, animated)
+  - 🗺️ View Route Map
+  - 🚨 Report Issue
+  - ✅ Safe Reach
+- **Route Info Card** — route name, total stops, your stop number
+- **Recent Activity Feed** — last 5 pings on your route with timestamps
+- **Pull-to-Refresh** with Material 3 refresh indicator
+- **Shimmer Loading** skeleton screens while data loads
+
+### 4. 🗺️ Live Map Tracking
+- **Google Maps** with custom styled map (dark mode compatible)
+- **Animated Route Polyline** — blue gradient line connecting all stops
+- **Stop Markers** — custom circular markers with stop numbers
+- **Bus Position Marker** — animated orange bus icon at last pinged stop
+- **Your Stop Marker** — highlighted green marker for your boarding point
+- **Camera Auto-Focus** — zooms to show bus position + your stop
+- **Bottom Sheet** — draggable info panel showing:
+  - Current bus location (stop name)
+  - ETA to your stop
+  - Stops remaining count
+  - Last ping timestamp + who pinged
+- **Marker Info Windows** — tap any stop to see its name and order
+
+### 5. 📡 PING System (Core Feature)
+- **One-Tap PING** — large animated button with ripple effect
+- **Stop Selection** — auto-detects your stop, or pick from list
+- **Status Tags** — On Time / Delayed / Crowded
+- **Cooldown Timer** — 2-minute cooldown with visible countdown
+- **Haptic Feedback** — vibration on successful ping
+- **Success Animation** — Lottie checkmark animation
+- **Real-Time Propagation** — all route students see update in < 2 seconds
+- **Ping History** — view recent pings with timestamps
+
+### 6. 🚨 Issue Reporting
+- **Report Types:**
+  - 🔧 Breakdown
+  - ⏰ Heavy Delay (30+ min)
+  - 🔄 Route Diverted
+  - ❌ Bus Cancelled
+- **Alert Banner** — red animated banner on all route users' screens
+- **Auto-Dismiss** — alerts expire after 2 hours
+- **Confirmation Dialog** — prevents accidental reports
+
+### 7. ✅ Safe Reach Notification
+- **"I Reached Safely" Button** — one tap with Lottie success animation
+- **Dual Notification:**
+  - FCM Push Notification (if parent has smartphone)
+  - SMS via device SIM (fallback for feature phones)
+- **Daily Reset** — button resets each morning
+- **History Log** — parent can see reach history (future scope)
+
+### 8. 👤 Profile & Settings
+- **Edit Profile** — name, college, route, stop
+- **Switch Route** — change bus route anytime
+- **Dark Mode Toggle** — system default / light / dark
+- **Notification Preferences** — toggle ping alerts, breakdown alerts
+- **Language Selection** — English / Kannada (future scope)
+- **About & Help** section
+- **Sign Out** with confirmation dialog
+- **Delete Account** option
+
+### 9. 🎭 UI/UX Polish (Professional Grade)
+- **Material Design 3** — Dynamic color theming
+- **Dark Mode** — full dark theme support
+- **Lottie Animations:**
+  - Splash screen bus animation
+  - Ping success checkmark
+  - Safe reach celebration
+  - Empty state illustrations
+  - Loading states
+- **Micro-Animations:**
+  - Button press scale + ripple
+  - Card elevation on touch
+  - Smooth fragment transitions
+  - Bottom nav icon animations
+  - Pull-to-refresh spring physics
+- **Shimmer Loading** — skeleton screens on all data-loading screens
+- **Custom Snackbars** — styled success/error/info messages
+- **Haptic Feedback** — on all primary actions
+
+### 10. 📶 Offline-First Design
+- **Firebase Offline Persistence** — cached data available offline
+- **Network Status Banner** — "You're offline" indicator
+- **Queued Pings** — pings sent when back online
+- **Last Known State** — always shows last known bus position
+- **Graceful Degradation** — all screens functional offline with cached data
+
+---
+
+## 🏗️ Architecture & Tech Stack
+
+### Tech Stack (100% Free Tier)
+
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| Language | Kotlin 1.9+ | Modern, null-safe, coroutines |
+| UI | XML + Material 3 | Professional UI components |
+| Architecture | MVVM + Clean Architecture | Scalable, testable |
+| DI | Hilt | Dependency injection |
+| Auth | Firebase Auth (Email + Google) | Sign Up, Sign In, Reset |
+| Database | Firebase Realtime Database | Real-time sync, offline cache |
+| Push | Firebase Cloud Messaging | Instant notifications |
+| Maps | Google Maps SDK | Route visualization |
+| SMS | Android SmsManager | Free SMS via device SIM |
+| Animations | Lottie + Material Motion | Professional animations |
+| Images | Glide | Efficient image loading |
+| Navigation | Jetpack Navigation Component | Single-activity navigation |
+
+### Architecture Diagram
 ```
-1. Click "Add Project" → name it: vidya-vahini
-2. Disable Google Analytics (not needed)
-3. Click "Create Project"
-4. Click "Add App" → choose Android icon
-5. Package name: com.vidyavahini.app
-6. App nickname: Vidya-Vahini
-7. Click "Register App"
-8. Download google-services.json
-9. Place it inside: YourProject/app/google-services.json
+┌─────────────────────────────────────────────┐
+│                 UI Layer                     │
+│  Fragments / Activities / XML Layouts       │
+│  Material 3 + Lottie + Shimmer              │
+└──────────────────┬──────────────────────────┘
+                   │ observes LiveData/StateFlow
+┌──────────────────▼──────────────────────────┐
+│              ViewModel Layer                 │
+│  AuthViewModel, HomeViewModel,               │
+│  TrackingViewModel, ProfileViewModel         │
+└──────────────────┬──────────────────────────┘
+                   │ calls UseCases
+┌──────────────────▼──────────────────────────┐
+│              Domain Layer                    │
+│  PingBusUseCase, GetRouteUseCase,           │
+│  ReportIssueUseCase, SafeReachUseCase       │
+└──────────────────┬──────────────────────────┘
+                   │ calls Repository
+┌──────────────────▼──────────────────────────┐
+│              Data Layer                      │
+│  FirebaseAuthRepository                      │
+│  RouteRepository, PingRepository             │
+│  StudentRepository                           │
+└──────────────────┬──────────────────────────┘
+                   │
+┌──────────────────▼──────────────────────────┐
+│           Firebase Backend                   │
+│  Auth │ Realtime DB │ FCM │ Storage         │
+└─────────────────────────────────────────────┘
 ```
 
-**Enable these Firebase services (left sidebar):**
+### Project Structure
 ```
-Build → Authentication → Get Started → Sign-in method → Phone → Enable → Save
-Build → Realtime Database → Create Database → Start in Test Mode → Enable
-Build → Cloud Messaging → (auto-enabled, nothing to do)
+app/src/main/java/com/vidyavahini/app/
+├── VidyaVahiniApp.kt                 // Application class
+├── di/
+│   ├── AppModule.kt                  // Hilt module
+│   └── RepositoryModule.kt
+├── data/
+│   ├── model/
+│   │   ├── Student.kt
+│   │   ├── Route.kt
+│   │   ├── Stop.kt
+│   │   ├── BusPing.kt
+│   │   ├── BusIssue.kt
+│   │   └── SafeReachEvent.kt
+│   ├── repository/
+│   │   ├── AuthRepository.kt
+│   │   ├── RouteRepository.kt
+│   │   ├── PingRepository.kt
+│   │   └── StudentRepository.kt
+│   └── datasource/
+│       └── FirebaseDataSource.kt
+├── domain/
+│   └── usecase/
+│       ├── SignInUseCase.kt
+│       ├── SignUpUseCase.kt
+│       ├── GetRoutesUseCase.kt
+│       ├── PingBusUseCase.kt
+│       ├── ListenPingsUseCase.kt
+│       ├── ReportIssueUseCase.kt
+│       └── SafeReachUseCase.kt
+├── ui/
+│   ├── splash/
+│   │   └── SplashActivity.kt
+│   ├── onboarding/
+│   │   └── OnboardingActivity.kt
+│   ├── auth/
+│   │   ├── SignInFragment.kt
+│   │   ├── SignUpFragment.kt
+│   │   └── ForgotPasswordFragment.kt
+│   ├── setup/
+│   │   └── ProfileSetupFragment.kt
+│   ├── home/
+│   │   └── HomeFragment.kt
+│   ├── tracking/
+│   │   └── TrackingFragment.kt
+│   ├── ping/
+│   │   └── PingFragment.kt
+│   ├── issues/
+│   │   └── ReportIssueFragment.kt
+│   ├── safereach/
+│   │   └── SafeReachFragment.kt
+│   ├── profile/
+│   │   └── ProfileFragment.kt
+│   ├── settings/
+│   │   └── SettingsFragment.kt
+│   └── common/
+│       ├── ShimmerView.kt
+│       └── NetworkBanner.kt
+├── viewmodel/
+│   ├── AuthViewModel.kt
+│   ├── HomeViewModel.kt
+│   ├── TrackingViewModel.kt
+│   └── ProfileViewModel.kt
+├── utils/
+│   ├── ETACalculator.kt
+│   ├── NotificationHelper.kt
+│   ├── NetworkMonitor.kt
+│   ├── HapticHelper.kt
+│   └── VidyaFirebaseMessagingService.kt
+└── res/
+    ├── layout/                       // All XML layouts
+    ├── navigation/nav_graph.xml
+    ├── anim/                         // Transition animations
+    ├── raw/                          // Lottie JSON files
+    ├── values/
+    │   ├── colors.xml
+    │   ├── strings.xml
+    │   ├── themes.xml
+    │   └── dimens.xml
+    └── values-night/
+        └── colors.xml                // Dark mode colors
+```
+## 🎯 Demo Data Strategy (Pre-Seeded — No Manual Entry)
+
+### Demo User Accounts (Pre-created in Firebase Auth)
+```
+Email: priya.demo@vidyavahini.app    Password: Demo@123    Name: Priya Sharma
+Email: rahul.demo@vidyavahini.app    Password: Demo@123    Name: Rahul Kumar  
+Email: ananya.demo@vidyavahini.app   Password: Demo@123    Name: Ananya Rao
 ```
 
-### Step 2: Google Maps API Key
-> URL: https://console.cloud.google.com
+### Pre-Seeded BMTC Routes (50 Real Bangalore Routes)
 
-```
-1. Create project OR select your existing project
-2. Left menu → APIs & Services → Library
-3. Search "Maps SDK for Android" → Enable
-4. Left menu → APIs & Services → Credentials
-5. Click "+ CREATE CREDENTIALS" → API Key
-6. Copy the key (looks like: AIzaSy_your_key_here)
-7. Click "Edit API Key" → Restrict to Android apps
-8. Add your SHA-1 fingerprint (see below)
-```
+The app ships with **50 realistic BMTC bus routes** pre-loaded. Here are the key demo routes:
 
-**Get your SHA-1 fingerprint (run this in Android Studio Terminal):**
-```bash
-./gradlew signingReport
-```
-Look for `SHA1:` under `Variant: debug` → copy that value → paste in Google Cloud Console.
+#### Route 1: KBS → Majestic → BMS College (Route 401D)
+| Stop# | Stop Name | Lat | Lng |
+|-------|----------|-----|-----|
+| 1 | Kempegowda Bus Station | 12.9779 | 77.5713 |
+| 2 | Majestic Metro | 12.9766 | 77.5713 |
+| 3 | Anand Rao Circle | 12.9850 | 77.5720 |
+| 4 | Race Course Road | 12.9890 | 77.5680 |
+| 5 | Seshadripuram | 12.9920 | 77.5740 |
+| 6 | Basavanagudi | 12.9435 | 77.5710 |
+| 7 | Bull Temple Road | 12.9430 | 77.5680 |
+| 8 | BMS College Gate | 12.9410 | 77.5650 |
 
-### Step 3: Where to Put the Keys
+#### Route 2: Electronic City → Silk Board → RV College (Route 500CA)
+| Stop# | Stop Name | Lat | Lng |
+|-------|----------|-----|-----|
+| 1 | Electronic City Phase 1 | 12.8456 | 77.6603 |
+| 2 | Infosys Gate | 12.8440 | 77.6580 |
+| 3 | Bommanahalli | 12.8890 | 77.6240 |
+| 4 | BTM Layout | 12.9166 | 77.6101 |
+| 5 | Silk Board Junction | 12.9177 | 77.6233 |
+| 6 | Jayanagar 4th Block | 12.9250 | 77.5830 |
+| 7 | South End Circle | 12.9370 | 77.5750 |
+| 8 | RV College of Engineering | 12.9237 | 77.4987 |
 
-**`local.properties`** (root of project — NEVER commit to GitHub)
-```properties
-sdk.dir=/path/to/your/android/sdk
-MAPS_API_KEY=AIzaSy_your_actual_key_here
-```
+#### Route 3: Whitefield → KR Puram → PES University (Route 335E)
+| Stop# | Stop Name | Lat | Lng |
+|-------|----------|-----|-----|
+| 1 | Whitefield Bus Stand | 12.9698 | 77.7500 |
+| 2 | ITPL Main Road | 12.9854 | 77.7310 |
+| 3 | Marathahalli Bridge | 12.9591 | 77.7019 |
+| 4 | KR Puram Railway | 12.9969 | 77.6970 |
+| 5 | Tin Factory | 12.9935 | 77.6620 |
+| 6 | Indiranagar | 12.9784 | 77.6408 |
+| 7 | MG Road | 12.9756 | 77.6095 |
+| 8 | PES University | 12.9344 | 77.5350 |
 
-**`app/build.gradle.kts`**
-```kotlin
-android {
-    defaultConfig {
-        applicationId = "com.vidyavahini.app"
-        minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
-        manifestPlaceholders["MAPS_API_KEY"] =
-            project.findProperty("MAPS_API_KEY") as String? ?: ""
+### Pre-Seeded Demo Students
+```json
+{
+  "students": {
+    "demo_uid_priya": {
+      "name": "Priya Sharma",
+      "email": "priya.demo@vidyavahini.app",
+      "college": "BMS College of Engineering",
+      "routeId": "route_401d",
+      "stopId": "stop_05",
+      "stopOrder": 5,
+      "parentPhone": "+919876543210",
+      "profileComplete": true
+    },
+    "demo_uid_rahul": {
+      "name": "Rahul Kumar",
+      "email": "rahul.demo@vidyavahini.app",
+      "college": "RV College of Engineering",
+      "routeId": "route_500ca",
+      "stopId": "stop_07",
+      "stopOrder": 7,
+      "parentPhone": "+919876543211",
+      "profileComplete": true
     }
+  }
 }
 ```
 
-**`app/src/main/AndroidManifest.xml`**
-```xml
-<manifest>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.SEND_SMS"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+### Bus Simulator for Demo
+A built-in **Demo Mode** simulates a bus moving along a route:
+- Toggle in Settings → "Enable Demo Simulation"
+- Bus auto-pings every 30 seconds, advancing one stop
+- Realistic ETA countdown updates
+- Demonstrates full real-time tracking without needing real users
 
-    <application>
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}"/>
+---
 
-        <service
-            android:name=".utils.VidyaFirebaseMessagingService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
-    </application>
-</manifest>
+## 🗄️ Firebase Database Structure (Enhanced)
+
+```json
+{
+  "routes": {
+    "route_401d": {
+      "routeNumber": "401D",
+      "name": "KBS → BMS College Express",
+      "college": "BMS College of Engineering",
+      "frequency": "Every 15 min",
+      "firstBus": "06:30 AM",
+      "lastBus": "09:00 PM",
+      "stops": {
+        "stop_01": { "name": "Kempegowda Bus Station", "lat": 12.9779, "lng": 77.5713, "order": 1 },
+        "stop_02": { "name": "Majestic Metro", "lat": 12.9766, "lng": 77.5713, "order": 2 },
+        "stop_03": { "name": "Anand Rao Circle", "lat": 12.9850, "lng": 77.5720, "order": 3 }
+      }
+    }
+  },
+  "pings": {
+    "route_401d": {
+      "latest": {
+        "stopId": "stop_03",
+        "stopName": "Anand Rao Circle",
+        "timestamp": 1714000000000,
+        "pingedBy": "demo_uid_priya",
+        "pingedByName": "Priya S.",
+        "status": "on_time",
+        "crowdLevel": "moderate"
+      },
+      "history": {
+        "ping_001": { "stopId": "stop_02", "timestamp": 1713999400000, "status": "on_time" },
+        "ping_002": { "stopId": "stop_01", "timestamp": 1713998800000, "status": "on_time" }
+      }
+    }
+  },
+  "issues": {
+    "route_401d": {
+      "active": false,
+      "type": "",
+      "reportedBy": "",
+      "reportedByName": "",
+      "timestamp": 0,
+      "message": "",
+      "expiresAt": 0
+    }
+  },
+  "safereach": {
+    "demo_uid_priya": {
+      "studentName": "Priya Sharma",
+      "reached": true,
+      "timestamp": 1714002000000,
+      "college": "BMS College of Engineering"
+    }
+  },
+  "colleges": {
+    "bms": { "name": "BMS College of Engineering", "lat": 12.9410, "lng": 77.5650 },
+    "rvce": { "name": "RV College of Engineering", "lat": 12.9237, "lng": 77.4987 },
+    "pes": { "name": "PES University", "lat": 12.9344, "lng": 77.5350 }
+  }
+}
 ```
 
 ---
 
-## 📦 Complete build.gradle.kts Dependencies
+## 📦 Dependencies (build.gradle.kts)
 
-**Project-level `build.gradle.kts`**
-```kotlin
-plugins {
-    id("com.android.application") version "8.3.0" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.23" apply false
-    id("com.google.gms.google-services") version "4.4.1" apply false
-}
-```
-
-**App-level `app/build.gradle.kts`**
 ```kotlin
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
+    id("com.google.dagger.hilt.android")
+    id("kotlin-kapt")
 }
 
 android {
     namespace = "com.vidyavahini.app"
     compileSdk = 34
-
     defaultConfig {
         applicationId = "com.vidyavahini.app"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-        manifestPlaceholders["MAPS_API_KEY"] =
-            project.findProperty("MAPS_API_KEY") as String? ?: ""
     }
-
     buildFeatures { viewBinding = true }
-
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions { jvmTarget = "1.8" }
+    kotlinOptions { jvmTarget = "17" }
 }
 
 dependencies {
-    // Firebase BoM — manages all Firebase versions automatically
+    // Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-database-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-messaging-ktx")
 
+    // Google Sign-In
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
+
     // Google Maps
     implementation("com.google.android.gms:play-services-maps:18.2.0")
+
+    // Hilt DI
+    implementation("com.google.dagger:hilt-android:2.51")
+    kapt("com.google.dagger:hilt-compiler:2.51")
 
     // Architecture Components
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 
-    // Navigation Component
+    // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
 
@@ -196,133 +491,115 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    // Lottie Animations
+    implementation("com.airbnb.android:lottie:6.4.0")
+
+    // Shimmer Loading
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
+
+    // Glide (images)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // ViewPager2 (onboarding)
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
+    // SwipeRefreshLayout
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }
 ```
 
 ---
 
-## 🏗️ Complete Project Folder Structure
+## 📱 Screen-by-Screen Flow
 
+### Flow 1: First-Time User
 ```
-app/
-└── src/main/
-    ├── java/com/vidyavahini/app/
-    │   ├── MyApplication.kt              ← Firebase offline persistence setup
-    │   │
-    │   ├── data/
-    │   │   ├── model/
-    │   │   │   ├── Student.kt
-    │   │   │   ├── Route.kt
-    │   │   │   ├── Stop.kt
-    │   │   │   ├── BusPing.kt
-    │   │   │   └── Breakdown.kt
-    │   │   └── repository/
-    │   │       └── FirebaseRepository.kt
-    │   │
-    │   ├── ui/
-    │   │   ├── auth/
-    │   │   │   ├── LoginFragment.kt      ← Phone number entry
-    │   │   │   ├── OtpFragment.kt        ← OTP verification
-    │   │   │   └── RegisterFragment.kt   ← Name + route + stop selection
-    │   │   ├── home/
-    │   │   │   └── HomeFragment.kt       ← Dashboard: last ping + PING button
-    │   │   ├── tracking/
-    │   │   │   └── TrackingFragment.kt   ← Map + ETA display
-    │   │   └── safereach/
-    │   │       └── SafeReachFragment.kt  ← "I Reached" button
-    │   │
-    │   ├── viewmodel/
-    │   │   ├── AuthViewModel.kt
-    │   │   └── TrackingViewModel.kt
-    │   │
-    │   └── utils/
-    │       ├── ETACalculator.kt
-    │       ├── NotificationHelper.kt
-    │       └── VidyaFirebaseMessagingService.kt
-    │
-    ├── res/
-    │   ├── layout/
-    │   │   ├── fragment_login.xml
-    │   │   ├── fragment_otp.xml
-    │   │   ├── fragment_register.xml
-    │   │   ├── fragment_home.xml
-    │   │   ├── fragment_tracking.xml
-    │   │   └── fragment_safe_reach.xml
-    │   ├── navigation/
-    │   │   └── nav_graph.xml
-    │   └── values/
-    │       ├── colors.xml
-    │       ├── strings.xml
-    │       └── themes.xml
-    │
-    ├── google-services.json              ← From Firebase console — NEVER commit
-    └── AndroidManifest.xml
+App Launch → Splash (Lottie, 2s) → Onboarding (3 slides) → Sign Up Screen
+→ Enter Email + Password → Create Account → Profile Setup (Name, College, Route, Stop)
+→ Home Dashboard
+```
+
+### Flow 2: Returning User  
+```
+App Launch → Splash (Lottie, 2s) → Auto Sign-In Check → Home Dashboard
+```
+
+### Flow 3: Daily Usage
+```
+Home Dashboard → See ETA → Tap "PING BUS" → Select current stop → Confirm
+→ All route students see update → View Map → See bus position → Safe Reach
+```
+
+### Bottom Navigation (4 tabs)
+```
+🏠 Home  |  🗺️ Map  |  📡 Ping  |  👤 Profile
 ```
 
 ---
 
-## 🗄️ Firebase Realtime Database Structure
+## 🎨 Design System
 
-Manually create this in the Firebase Console → Realtime Database:
+### Color Palette
+```xml
+<!-- Primary: Deep Transit Blue -->
+<color name="primary">#1565C0</color>
+<color name="primary_variant">#0D47A1</color>
+<color name="primary_light">#42A5F5</color>
 
-```json
-{
-  "routes": {
-    "route_pune_nashik": {
-      "name": "Pune to Nashik College Express",
-      "stops": {
-        "stop_01": { "name": "Shivajinagar",  "lat": 18.5308, "lng": 73.8474, "order": 1 },
-        "stop_02": { "name": "Pimpri Bridge", "lat": 18.6188, "lng": 73.7997, "order": 2 },
-        "stop_03": { "name": "Dehu Road",     "lat": 18.6879, "lng": 73.7624, "order": 3 },
-        "stop_04": { "name": "Talegaon",      "lat": 18.7349, "lng": 73.6750, "order": 4 },
-        "stop_05": { "name": "College Gate",  "lat": 18.7980, "lng": 73.6123, "order": 5 }
-      }
-    }
-  },
-  "pings": {
-    "route_pune_nashik": {
-      "latest": {
-        "stopId": "stop_02",
-        "timestamp": 1714000000000,
-        "pinggedBy": "test_uid",
-        "status": "on_time"
-      }
-    }
-  },
-  "breakdowns": {
-    "route_pune_nashik": {
-      "active": false,
-      "reportedBy": "",
-      "timestamp": 0,
-      "message": ""
-    }
-  },
-  "students": {
-    "example_uid": {
-      "name": "Priya Sharma",
-      "routeId": "route_pune_nashik",
-      "stopId": "stop_01",
-      "parentPhone": "+919876543210",
-      "fcmToken": ""
-    }
-  }
-}
+<!-- Secondary: Vibrant Amber -->
+<color name="secondary">#FF8F00</color>
+<color name="secondary_light">#FFB300</color>
+
+<!-- Accent: Success Green -->
+<color name="success">#2E7D32</color>
+<color name="error">#C62828</color>
+<color name="warning">#EF6C00</color>
+
+<!-- Surface -->
+<color name="surface">#FAFAFA</color>
+<color name="surface_card">#FFFFFF</color>
+<color name="on_surface">#1B1B1F</color>
+
+<!-- Dark Mode -->
+<color name="dark_background">#121212</color>
+<color name="dark_surface">#1E1E1E</color>
+<color name="dark_card">#2C2C2C</color>
 ```
+
+### Typography (Google Fonts: Inter + Outfit)
+```
+Headlines:  Outfit Bold 24sp
+Subtitles:  Outfit SemiBold 18sp  
+Body:       Inter Regular 16sp
+Caption:    Inter Regular 12sp
+Button:     Inter SemiBold 14sp (ALL CAPS)
+```
+
+### Component Styling
+- **Cards**: 16dp corner radius, 2dp elevation, 16dp padding
+- **Buttons**: 28dp corner radius, 48dp min height, ripple effect
+- **Inputs**: Outlined style, 12dp corner radius, helper text below
+- **Bottom Nav**: Animated icon transitions, badge support
+- **Snackbars**: Rounded 12dp, custom colors per type
 
 ---
 
 ## 🔐 Firebase Security Rules
 
-Go to Firebase Console → Realtime Database → Rules tab → paste:
-
 ```json
 {
   "rules": {
     "routes": {
+      ".read": "auth != null",
+      ".write": false
+    },
+    "colleges": {
       ".read": "auth != null",
       ".write": false
     },
@@ -332,7 +609,7 @@ Go to Firebase Console → Realtime Database → Rules tab → paste:
         ".write": "auth != null"
       }
     },
-    "breakdowns": {
+    "issues": {
       "$routeId": {
         ".read": "auth != null",
         ".write": "auth != null"
@@ -356,780 +633,224 @@ Go to Firebase Console → Realtime Database → Rules tab → paste:
 
 ---
 
-## 🧩 Complete Kotlin Code — Every File
-
----
-
-### `MyApplication.kt`
-```kotlin
-class MyApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
-        // CRITICAL for rural 2G areas — caches last known ping when offline
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
-    }
-}
-```
-Add to AndroidManifest.xml application tag: `android:name=".MyApplication"`
-
----
-
-### `data/model/Stop.kt`
-```kotlin
-data class Stop(
-    val name: String = "",
-    val lat: Double = 0.0,
-    val lng: Double = 0.0,
-    val order: Int = 0
-)
-```
-
-### `data/model/Route.kt`
-```kotlin
-data class Route(
-    val name: String = "",
-    val stops: Map<String, Stop> = emptyMap()
-)
-```
-
-### `data/model/BusPing.kt`
-```kotlin
-data class BusPing(
-    val stopId: String = "",
-    val timestamp: Long = 0L,
-    val pinggedBy: String = "",
-    val status: String = "on_time"   // "on_time" | "delayed" | "breakdown"
-)
-```
-
-### `data/model/Breakdown.kt`
-```kotlin
-data class Breakdown(
-    val active: Boolean = false,
-    val reportedBy: String = "",
-    val timestamp: Long = 0L,
-    val message: String = ""
-)
-```
-
-### `data/model/Student.kt`
-```kotlin
-data class Student(
-    val name: String = "",
-    val routeId: String = "",
-    val stopId: String = "",
-    val parentPhone: String = "",
-    val fcmToken: String = ""
-)
-```
-
----
-
-### `data/repository/FirebaseRepository.kt`
-```kotlin
-class FirebaseRepository {
-
-    private val db   = FirebaseDatabase.getInstance().reference
-    private val auth = FirebaseAuth.getInstance()
-
-    // ── Student ─────────────────────────────────────────────────────────
-    fun saveStudent(student: Student) {
-        val uid = auth.currentUser?.uid ?: return
-        db.child("students").child(uid).setValue(student)
-    }
-
-    fun getStudent(onResult: (Student?) -> Unit) {
-        val uid = auth.currentUser?.uid ?: return
-        db.child("students").child(uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snap: DataSnapshot) {
-                    onResult(snap.getValue(Student::class.java))
-                }
-                override fun onCancelled(e: DatabaseError) { onResult(null) }
-            })
-    }
-
-    // ── Route ────────────────────────────────────────────────────────────
-    fun getRoute(routeId: String, onResult: (Route?) -> Unit) {
-        db.child("routes").child(routeId)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snap: DataSnapshot) {
-                    onResult(snap.getValue(Route::class.java))
-                }
-                override fun onCancelled(e: DatabaseError) { onResult(null) }
-            })
-    }
-
-    fun getAllRoutes(onResult: (Map<String, Route>) -> Unit) {
-        db.child("routes")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snap: DataSnapshot) {
-                    val map = mutableMapOf<String, Route>()
-                    snap.children.forEach { child ->
-                        child.getValue(Route::class.java)?.let { map[child.key!!] = it }
-                    }
-                    onResult(map)
-                }
-                override fun onCancelled(e: DatabaseError) { onResult(emptyMap()) }
-            })
-    }
-
-    // ── Ping ─────────────────────────────────────────────────────────────
-    fun pingBus(routeId: String, stopId: String) {
-        val uid = auth.currentUser?.uid ?: return
-        val ping = BusPing(
-            stopId    = stopId,
-            timestamp = System.currentTimeMillis(),
-            pinggedBy = uid,
-            status    = "on_time"
-        )
-        db.child("pings").child(routeId).child("latest").setValue(ping)
-    }
-
-    fun listenForPings(routeId: String, onUpdate: (BusPing) -> Unit): ValueEventListener {
-        val listener = object : ValueEventListener {
-            override fun onDataChange(snap: DataSnapshot) {
-                snap.getValue(BusPing::class.java)?.let { onUpdate(it) }
-            }
-            override fun onCancelled(e: DatabaseError) {}
-        }
-        db.child("pings").child(routeId).child("latest").addValueEventListener(listener)
-        return listener
-    }
-
-    fun removePingListener(routeId: String, listener: ValueEventListener) {
-        db.child("pings").child(routeId).child("latest").removeEventListener(listener)
-    }
-
-    // ── Breakdown ────────────────────────────────────────────────────────
-    fun reportBreakdown(routeId: String, message: String) {
-        val uid = auth.currentUser?.uid ?: return
-        val breakdown = Breakdown(
-            active     = true,
-            reportedBy = uid,
-            timestamp  = System.currentTimeMillis(),
-            message    = message
-        )
-        db.child("breakdowns").child(routeId).setValue(breakdown)
-    }
-
-    fun listenForBreakdown(routeId: String, onUpdate: (Breakdown?) -> Unit) {
-        db.child("breakdowns").child(routeId)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snap: DataSnapshot) {
-                    onUpdate(snap.getValue(Breakdown::class.java))
-                }
-                override fun onCancelled(e: DatabaseError) { onUpdate(null) }
-            })
-    }
-}
-```
-
----
-
-### `utils/ETACalculator.kt`
-```kotlin
-object ETACalculator {
-
-    // Average minutes between consecutive stops — adjust per route
-    private val avgMinutesPerStop = mapOf(
-        "route_pune_nashik" to 12,
-        "route_default"     to 10
-    )
-
-    fun calculateETA(routeId: String, busCurrentOrder: Int, studentStopOrder: Int): Int {
-        val avg       = avgMinutesPerStop[routeId] ?: avgMinutesPerStop["route_default"]!!
-        val stopsAway = studentStopOrder - busCurrentOrder
-        return if (stopsAway > 0) stopsAway * avg else 0
-    }
-
-    fun formatETA(minutes: Int): String = when {
-        minutes <= 0  -> "Bus may have already passed your stop"
-        minutes <= 2  -> "Bus arriving NOW — head to your stop!"
-        minutes <= 60 -> "Bus expected in $minutes minutes"
-        else          -> "Bus expected in ${minutes / 60}h ${minutes % 60}m"
-    }
-}
-```
-
----
-
-### `viewmodel/TrackingViewModel.kt`
-```kotlin
-class TrackingViewModel : ViewModel() {
-
-    private val repo = FirebaseRepository()
-
-    val latestPing   = MutableLiveData<BusPing>()
-    val etaText      = MutableLiveData<String>()
-    val breakdown    = MutableLiveData<Breakdown?>()
-    val currentRoute = MutableLiveData<Route>()
-
-    private var pingListener: ValueEventListener? = null
-    private var activeRouteId = ""
-
-    fun loadRoute(routeId: String) {
-        activeRouteId = routeId
-        repo.getRoute(routeId) { route ->
-            route?.let { currentRoute.postValue(it) }
-        }
-    }
-
-    fun startListening(routeId: String, studentStopOrder: Int) {
-        activeRouteId = routeId
-        pingListener = repo.listenForPings(routeId) { ping ->
-            latestPing.postValue(ping)
-            val stops    = currentRoute.value?.stops ?: return@listenForPings
-            val busOrder = stops[ping.stopId]?.order ?: 0
-            val eta      = ETACalculator.calculateETA(routeId, busOrder, studentStopOrder)
-            etaText.postValue(ETACalculator.formatETA(eta))
-        }
-        repo.listenForBreakdown(routeId) { b -> breakdown.postValue(b) }
-    }
-
-    fun pingBus(stopId: String)            { repo.pingBus(activeRouteId, stopId) }
-    fun reportBreakdown(message: String)   { repo.reportBreakdown(activeRouteId, message) }
-
-    override fun onCleared() {
-        super.onCleared()
-        pingListener?.let { repo.removePingListener(activeRouteId, it) }
-    }
-}
-```
-
----
-
-### `ui/tracking/TrackingFragment.kt` — Map + Route Line (Gap 1 Fixed)
-```kotlin
-class TrackingFragment : Fragment(), OnMapReadyCallback {
-
-    private lateinit var binding: FragmentTrackingBinding
-    private lateinit var googleMap: GoogleMap
-    private val viewModel: TrackingViewModel by viewModels()
-    private var busMarker: Marker? = null
-
-    override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?) =
-        FragmentTrackingBinding.inflate(i, c, false).also { binding = it }.root
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val prefs        = requireContext().getSharedPreferences("vidya", Context.MODE_PRIVATE)
-        val routeId      = prefs.getString("routeId", "") ?: ""
-        val stopId       = prefs.getString("stopId",  "") ?: ""
-        val studentOrder = prefs.getInt("stopOrder", 1)
-
-        (childFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment)
-            .getMapAsync(this)
-
-        viewModel.loadRoute(routeId)
-        viewModel.startListening(routeId, studentOrder)
-
-        viewModel.etaText.observe(viewLifecycleOwner) { binding.tvEta.text = it }
-
-        viewModel.latestPing.observe(viewLifecycleOwner) { ping ->
-            val stop = viewModel.currentRoute.value?.stops?.get(ping.stopId) ?: return@observe
-            busMarker?.remove()
-            busMarker = googleMap.addMarker(
-                MarkerOptions()
-                    .position(LatLng(stop.lat, stop.lng))
-                    .title("Bus is here: ${stop.name}")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-            )
-            binding.tvLastPing.text = "Last seen: ${stop.name}"
-        }
-
-        viewModel.breakdown.observe(viewLifecycleOwner) { b ->
-            binding.cardBreakdown.visibility = if (b?.active == true) View.VISIBLE else View.GONE
-            binding.tvBreakdownMsg.text = b?.message ?: ""
-        }
-
-        binding.btnPing.setOnClickListener {
-            viewModel.pingBus(stopId)
-            binding.btnPing.text = "Pinged!"
-            binding.btnPing.isEnabled = false
-            // Cooldown: prevent spam pings for 2 minutes
-            binding.btnPing.postDelayed({
-                binding.btnPing.text = "PING BUS"
-                binding.btnPing.isEnabled = true
-            }, 120_000L)
-        }
-
-        binding.btnBreakdown.setOnClickListener {
-            viewModel.reportBreakdown("Bus has broken down — find alternatives!")
-        }
-    }
-
-    override fun onMapReady(map: GoogleMap) {
-        googleMap = map
-        googleMap.uiSettings.isZoomControlsEnabled = true
-        viewModel.currentRoute.observe(viewLifecycleOwner) { drawRouteLine(it) }
-    }
-
-    // ── ROUTE LINE DRAWING — Horizontal polyline with stop markers ────────
-    private fun drawRouteLine(route: Route) {
-        val sortedStops = route.stops.values.sortedBy { it.order }
-        val latLngs     = sortedStops.map { LatLng(it.lat, it.lng) }
-
-        // Draw the blue route polyline
-        googleMap.addPolyline(
-            PolylineOptions()
-                .addAll(latLngs)
-                .color(Color.parseColor("#1565C0"))  // dark blue
-                .width(10f)
-                .geodesic(true)
-        )
-
-        // Add a circle + pin at each stop
-        sortedStops.forEach { stop ->
-            googleMap.addCircle(
-                CircleOptions()
-                    .center(LatLng(stop.lat, stop.lng))
-                    .radius(150.0)
-                    .fillColor(Color.parseColor("#90CAF9"))   // light blue fill
-                    .strokeColor(Color.parseColor("#1565C0")) // dark blue border
-                    .strokeWidth(3f)
-            )
-            googleMap.addMarker(
-                MarkerOptions()
-                    .position(LatLng(stop.lat, stop.lng))
-                    .title("Stop ${stop.order}: ${stop.name}")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-            )
-        }
-
-        // Auto-zoom camera to show the entire route
-        val bounds = LatLngBounds.Builder().apply { latLngs.forEach { include(it) } }.build()
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
-    }
-}
-```
-
----
-
-### `ui/safereach/SafeReachFragment.kt` — FCM + SMS Fallback (Gap 3 Fixed)
-```kotlin
-class SafeReachFragment : Fragment() {
-
-    private lateinit var binding: FragmentSafeReachBinding
-
-    override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?) =
-        FragmentSafeReachBinding.inflate(i, c, false).also { binding = it }.root
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val prefs       = requireContext().getSharedPreferences("vidya", Context.MODE_PRIVATE)
-        val studentName = prefs.getString("name", "Your child") ?: "Your child"
-        val parentPhone = prefs.getString("parentPhone", "") ?: ""
-
-        binding.btnReached.setOnClickListener {
-            // Method 1: FCM notification (parent has smartphone + app)
-            NotificationHelper.sendFCMSafeReach(studentName)
-
-            // Method 2: SMS fallback — FREE, uses device SIM, works for feature phones
-            if (parentPhone.isNotEmpty()) {
-                sendSmsToParent(parentPhone, studentName)
-            }
-
-            binding.btnReached.text     = "Parents Notified!"
-            binding.btnReached.isEnabled = false
-            binding.tvStatus.text       = "$studentName has safely reached college."
-        }
-    }
-
-    // SMS via Android SmsManager — no API key, no cost, works on any parent phone
-    private fun sendSmsToParent(phone: String, name: String) {
-        try {
-            val msg        = "$name has safely reached college. - Vidya-Vahini"
-            val smsManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                requireContext().getSystemService(SmsManager::class.java)
-            } else {
-                @Suppress("DEPRECATION") SmsManager.getDefault()
-            }
-            smsManager.sendTextMessage(phone, null, msg, null, null)
-        } catch (e: Exception) {
-            // SMS failed — FCM was already sent as primary method
-        }
-    }
-}
-```
-
----
-
-### `utils/NotificationHelper.kt`
-```kotlin
-object NotificationHelper {
-
-    fun sendFCMSafeReach(studentName: String) {
-        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        FirebaseDatabase.getInstance().reference
-            .child("safereach").child(uid).setValue(
-                mapOf(
-                    "studentName" to studentName,
-                    "timestamp"   to System.currentTimeMillis(),
-                    "reached"     to true
-                )
-            )
-    }
-
-    fun showLocalNotification(context: Context, title: String, message: String) {
-        val channelId = "vidya_alerts"
-        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            nm.createNotificationChannel(
-                NotificationChannel(channelId, "Bus Alerts", NotificationManager.IMPORTANCE_HIGH)
-            )
-        }
-
-        val notification = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setContentTitle(title)
-            .setContentText(message)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(true)
-            .build()
-
-        nm.notify(System.currentTimeMillis().toInt(), notification)
-    }
-}
-```
-
----
-
-### `utils/VidyaFirebaseMessagingService.kt`
-```kotlin
-class VidyaFirebaseMessagingService : FirebaseMessagingService() {
-
-    override fun onMessageReceived(message: RemoteMessage) {
-        super.onMessageReceived(message)
-        NotificationHelper.showLocalNotification(
-            this,
-            message.notification?.title ?: "Vidya-Vahini",
-            message.notification?.body  ?: "Bus update"
-        )
-    }
-
-    override fun onNewToken(token: String) {
-        super.onNewToken(token)
-        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        FirebaseDatabase.getInstance().reference
-            .child("students").child(uid).child("fcmToken").setValue(token)
-    }
-}
-```
-
----
-
-### `viewmodel/AuthViewModel.kt`
-```kotlin
-class AuthViewModel : ViewModel() {
-
-    private val auth = FirebaseAuth.getInstance()
-    val authState = MutableLiveData<String>()  // "sent" | "verified" | "error"
-
-    lateinit var verificationId: String
-
-    fun sendOtp(phoneNumber: String, activity: Activity) {
-        val options = PhoneAuthOptions.newBuilder(auth)
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(60L, TimeUnit.SECONDS)
-            .setActivity(activity)
-            .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                    signInWithCredential(credential)
-                }
-                override fun onVerificationFailed(e: FirebaseException) {
-                    authState.postValue("error: ${e.message}")
-                }
-                override fun onCodeSent(vId: String, token: PhoneAuthProvider.ForceResendingToken) {
-                    verificationId = vId
-                    authState.postValue("sent")
-                }
-            }).build()
-        PhoneAuthProvider.verifyPhoneNumber(options)
-    }
-
-    fun verifyOtp(otp: String) {
-        val credential = PhoneAuthProvider.getCredential(verificationId, otp)
-        signInWithCredential(credential)
-    }
-
-    private fun signInWithCredential(credential: PhoneAuthCredential) {
-        auth.signInWithCredential(credential)
-            .addOnSuccessListener { authState.postValue("verified") }
-            .addOnFailureListener { authState.postValue("error: ${it.message}") }
-    }
-}
-```
-
----
-
-## 📱 Screen UI Layout Guide
-
-### `fragment_home.xml` — Main Dashboard
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
-
-    <!-- Route name -->
-    <TextView android:id="@+id/tvRouteName"
-        android:text="Pune → Nashik College Express"
-        android:textSize="18sp" android:textStyle="bold"
-        android:layout_width="match_parent" android:layout_height="wrap_content"/>
-
-    <!-- Last ping status card -->
-    <com.google.android.material.card.MaterialCardView
-        android:layout_marginTop="16dp"
-        android:layout_width="match_parent" android:layout_height="wrap_content">
-        <LinearLayout android:orientation="vertical" android:padding="16dp"
-            android:layout_width="match_parent" android:layout_height="wrap_content">
-            <TextView android:text="Last Bus Update" android:textSize="12sp"
-                android:textColor="#888888"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <TextView android:id="@+id/tvLastPing"
-                android:text="Waiting for first ping..."
-                android:textSize="16sp" android:layout_marginTop="4dp"
-                android:layout_width="match_parent" android:layout_height="wrap_content"/>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- ETA display -->
-    <TextView android:id="@+id/tvEta"
-        android:layout_marginTop="16dp"
-        android:text="ETA: Calculating..."
-        android:textSize="20sp" android:textStyle="bold"
-        android:textColor="#1565C0"
-        android:layout_width="match_parent" android:layout_height="wrap_content"/>
-
-    <!-- PING BUS button — big, prominent -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnPing"
-        android:text="PING BUS"
-        android:textSize="18sp"
-        android:layout_marginTop="24dp"
-        android:layout_width="match_parent" android:layout_height="64dp"/>
-
-    <!-- Report Breakdown button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnBreakdown"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:text="Report Breakdown"
-        android:layout_marginTop="12dp"
-        android:layout_width="match_parent" android:layout_height="wrap_content"/>
-
-    <!-- View Map button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnMap"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:text="View Route Map"
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent" android:layout_height="wrap_content"/>
-
-    <!-- Safe-Reach button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSafeReach"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:text="I Reached College Safely"
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent" android:layout_height="wrap_content"/>
-
-</LinearLayout>
-```
-
-### `fragment_tracking.xml` — Map Screen
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-
-    <!-- Map takes 60% of screen height -->
-    <fragment
-        android:id="@+id/mapFragment"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="0dp" android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.6"
-        app:layout_constraintBottom_toTopOf="@id/etaCard"/>
-
-    <!-- ETA info card -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/etaCard"
-        android:layout_margin="12dp"
-        android:layout_width="0dp" android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mapFragment">
-        <LinearLayout android:orientation="vertical" android:padding="16dp"
-            android:layout_width="match_parent" android:layout_height="wrap_content">
-            <TextView android:id="@+id/tvEta" android:textSize="18sp" android:textStyle="bold"
-                android:layout_width="match_parent" android:layout_height="wrap_content"/>
-            <TextView android:id="@+id/tvLastPing" android:textSize="13sp"
-                android:textColor="#888888" android:layout_marginTop="4dp"
-                android:layout_width="match_parent" android:layout_height="wrap_content"/>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Breakdown alert (hidden by default) -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardBreakdown"
-        android:visibility="gone"
-        android:layout_margin="12dp"
-        android:layout_width="0dp" android:layout_height="wrap_content"
-        app:cardBackgroundColor="#FFEBEE"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etaCard">
-        <TextView android:id="@+id/tvBreakdownMsg" android:padding="12dp"
-            android:textColor="#C62828"
-            android:layout_width="match_parent" android:layout_height="wrap_content"/>
-    </com.google.android.material.card.MaterialCardView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-```
-
----
-
-## 🔐 `.gitignore` — MANDATORY — Add Before First Commit
-
-```
-# Secret files — NEVER commit these to GitHub
-local.properties
-google-services.json
-*.keystore
-*.jks
-
-# Build outputs
-/build
-/app/build
-*.apk
-*.aab
-*.dex
-
-# IDE files
-.idea/
-*.iml
-.gradle/
-captures/
-
-# OS files
-.DS_Store
-Thumbs.db
-```
-
----
-
-## 🗓️ 4-Week Day-by-Day Execution Timeline
-
-### Week 1 — Project Setup + Authentication
+## 🔑 API Keys & Configuration
+
+### Firebase Setup
+1. Create project at console.firebase.google.com → "vidya-vahini"
+2. Enable: **Authentication** (Email/Password + Google) 
+3. Enable: **Realtime Database** (Start in Test Mode)
+4. Enable: **Cloud Messaging** (auto-enabled)
+5. Add Android app → package: `com.vidyavahini.app`
+6. Download `google-services.json` → place in `app/`
+
+### Google Maps API
+1. console.cloud.google.com → Enable "Maps SDK for Android"
+2. Create API Key → Restrict to Android apps + your SHA-1
+3. Add to `local.properties`: `MAPS_API_KEY=AIzaSy_your_key`
+
+### Google Sign-In
+1. Firebase Console → Authentication → Sign-in method → Google → Enable
+2. Add SHA-1 fingerprint (from `./gradlew signingReport`)
+3. Web Client ID auto-generated — use in `GoogleSignInOptions`
+## 🗓️ 4-Week Implementation Timeline
+
+### Week 1 — Foundation + Auth (Days 1-7)
 
 | Day | Task | Success Signal |
 |-----|------|----------------|
-| 1 | Create Firebase project, download `google-services.json`, create Android Studio project with package `com.vidyavahini.app` | Project builds and runs on emulator |
-| 2 | Add all dependencies to `build.gradle.kts`, sync project, resolve any conflicts | Gradle sync succeeds with no errors |
-| 3 | Enable Maps SDK, get API key, add to `local.properties`, test blank map renders | Map tiles visible on screen |
-| 4 | Create `LoginFragment` with phone number input, country code picker | Login UI renders correctly |
-| 5 | Wire `AuthViewModel.sendOtp()` to the login button, test OTP delivery on real device | OTP SMS received on phone |
-| 6 | Build `OtpFragment`, wire `verifyOtp()`, on success navigate to `RegisterFragment` | OTP verification works |
-| 7 | Build `RegisterFragment` — name field, route dropdown (from Firebase), stop dropdown | Registration saves student to Firebase |
+| 1 | Project setup: Android Studio, Firebase project, google-services.json, all dependencies | Gradle syncs, app runs on emulator |
+| 2 | Hilt DI setup, Application class, base architecture (repositories, modules) | DI compiles, no Hilt errors |
+| 3 | Splash screen with Lottie animation + 3-screen onboarding ViewPager2 | Splash → Onboarding flow works |
+| 4 | Sign Up screen: email + password fields, validation, MaterialTextInput styling | Form validates email format + password strength |
+| 5 | Sign In screen: email + password, "Forgot Password" link, error messages | Sign in works, wrong password shows error |
+| 6 | Google Sign-In integration (one-tap) + auto sign-in for returning users | Google button signs in, app remembers login |
+| 7 | Profile Setup: name, college dropdown, route selection, stop selection | Profile saves to Firebase, navigates to Home |
 
-### Week 2 — Core PING Feature (Most Critical)
-
-| Day | Task | Success Signal |
-|-----|------|----------------|
-| 8 | Manually add routes + stops in Firebase Console (use the JSON structure above) | Data visible in Firebase console |
-| 9 | Build `FirebaseRepository.kt` — `pingBus()` and `listenForPings()` | Ping writes to Firebase; listener fires |
-| 10 | Build `TrackingViewModel.kt` with LiveData wiring to repository | ViewModel unit-testable in isolation |
-| 11 | Build `HomeFragment` UI — route name, last ping card, ETA text, PING button | Home screen renders correctly |
-| 12 | Wire PING button to `viewModel.pingBus()` + 2-minute cooldown | Button triggers Firebase write |
-| 13 | **Critical test**: run app on 2 devices simultaneously — ping on Device A, see update on Device B | Real-time update confirmed < 2 sec |
-| 14 | Add breakdown report button wiring | Breakdown writes to Firebase |
-
-### Week 3 — Map + ETA + Notifications
+### Week 2 — Core Features: Dashboard + PING (Days 8-14)
 
 | Day | Task | Success Signal |
 |-----|------|----------------|
-| 15 | Build `TrackingFragment`, set up `SupportMapFragment`, `onMapReady()` callback | Map loads in tracking screen |
-| 16 | Implement `drawRouteLine()` — polyline connecting all stops + circle markers | Blue route line visible on map |
-| 17 | Wire `latestPing` observer to move bus marker on map | Orange marker moves to last pinged stop |
-| 18 | Wire ETA: `latestPing` → `ETACalculator` → display text | "Bus expected in X minutes" shows |
-| 19 | Build `VidyaFirebaseMessagingService.kt`, update FCM token to Firebase on new token | FCM token saved in student's DB node |
-| 20 | Test FCM: use Firebase Console → Cloud Messaging → send test notification | Notification appears on device |
-| 21 | Full flow test: ping → map marker moves → ETA updates → breakdown pushes notification | Entire core feature working end-to-end |
+| 8 | Seed Firebase with 50 BMTC routes + demo data using Python script | Data visible in Firebase Console |
+| 9 | Home Dashboard layout: greeting card, ETA card, quick actions, shimmer loading | Dashboard renders with all cards |
+| 10 | PING system: PingBusUseCase, PingRepository, ping button with cooldown | Ping writes to Firebase, cooldown works |
+| 11 | Real-time ping listener: LiveData observers, ETA calculation, countdown timer | ETA updates when someone pings |
+| 12 | Bottom Navigation setup (Home, Map, Ping, Profile) + fragment transitions | All tabs navigate correctly with animations |
+| 13 | Issue reporting: type selection dialog, active alert banner, auto-expire | Breakdown alert shows on all route screens |
+| 14 | **2-Device Test**: Ping on Device A → update appears on Device B in < 2s | Real-time sync confirmed |
 
-### Week 4 — Safe-Reach + Security + Polish
+### Week 3 — Map + Notifications + Safe Reach (Days 15-21)
 
 | Day | Task | Success Signal |
 |-----|------|----------------|
-| 22 | Build `SafeReachFragment` — "I Reached" button UI with status text | Safe-Reach screen renders |
-| 23 | Wire FCM Safe-Reach notification + `SmsManager` SMS fallback | Parent receives SMS on feature phone |
-| 24 | Apply Firebase Security Rules (replace test mode with the rules above) | Unauthorized writes rejected |
-| 25 | Enable `FirebaseDatabase.setPersistenceEnabled(true)` in `MyApplication.kt` | App shows last ping even offline |
-| 26 | Test on low-end device: Android 8, 2 GB RAM, via 2G mobile hotspot | App loads, ping works, no crashes |
-| 27 | UI polish — consistent colors, readable text, Material Design buttons, accessibility | App looks clean and professional |
-| 28 | Final checklist test, generate debug APK, record demo video, write README.md | Project complete and ready to present |
+| 15 | Map screen: Google Maps, custom style, route polyline, stop markers | Map loads with blue route line |
+| 16 | Bus position marker (animated), your-stop marker (green), camera auto-zoom | Orange bus marker moves on ping |
+| 17 | Map bottom sheet: draggable panel with ETA, stops remaining, last ping info | Bottom sheet slides up/down smoothly |
+| 18 | FCM setup: messaging service, token management, local notifications | Push notification appears on device |
+| 19 | Safe Reach: "I Reached" button, Lottie celebration, FCM notification | Button triggers parent notification |
+| 20 | SMS fallback: SmsManager integration, runtime permission, feature phone support | SMS sent to parent's number |
+| 21 | Demo Mode simulator: auto-ping bus advancing through stops every 30s | Bus moves on map automatically |
+
+### Week 4 — Polish + Dark Mode + Final Testing (Days 22-28)
+
+| Day | Task | Success Signal |
+|-----|------|----------------|
+| 22 | Dark mode: night colors, theme toggle in settings, dynamic switching | App switches theme without restart |
+| 23 | Animations: Lottie for empty states, loading, success; micro-animations on buttons | All animations play smoothly |
+| 24 | Shimmer loading on all screens, pull-to-refresh, haptic feedback | Skeleton screens show while loading |
+| 25 | Profile screen: edit info, switch route, notification prefs, sign out | All settings functional |
+| 26 | Offline mode: network banner, cached data display, queued pings | App works offline, syncs when back |
+| 27 | Low-end device test: Android 8, 2GB RAM, 2G network simulation | No crashes, loads in < 3s |
+| 28 | Final polish, generate debug APK, record demo video, update README | APK < 15MB, demo video recorded |
 
 ---
 
-## ✅ Final Success Criteria Checklist
+## 🧪 Demo Presentation Script (5 Minutes)
 
-| Requirement | Covered By | Status |
-|---|---|---|
-| Ping updates ALL users on route instantly | Firebase Realtime DB push listener | Covered |
-| "Report Breakdown" alerts all students to find alternatives | Breakdown DB node + FCM notification | Covered |
-| UI lightweight, works on low-end smartphones | Material UI, APK target < 15 MB, Week 4 Day 26 test | Covered |
-| ETA simulated from average time between stops | `ETACalculator.kt` with `avgMinutesPerStop` | Covered |
-| Safe-Reach notifies parents/friends | FCM (smartphones) + SmsManager fallback (feature phones) | Covered |
-| Works on poor / 2G connectivity | Firebase offline persistence enabled | Covered |
-| All tools on free tier | Validated — 0.14% of Firebase free quota used | Covered |
-| Route line shows bus's last known position | `drawRouteLine()` + orange bus marker | Covered |
+### Step 1: First Launch (30s)
+- Show animated splash screen
+- Swipe through 3 onboarding screens
+- Click "Get Started"
+
+### Step 2: Sign Up + Profile (60s)
+- Create account with email + password
+- Show password strength indicator
+- Complete profile: select "BMS College", Route 401D, "Seshadripuram" stop
+- Show OR sign in with Google button
+
+### Step 3: Home Dashboard (45s)
+- Show greeting card with student name
+- Point out shimmer loading → data loads
+- Show ETA countdown timer
+- Demonstrate pull-to-refresh
+
+### Step 4: PING Bus (60s)
+- Tap "PING BUS" → select stop → confirm
+- Show Lottie success animation + haptic feedback
+- Show cooldown timer on button
+- **On second device**: show ping update appearing in < 2 seconds
+- Show ETA recalculating
+
+### Step 5: Live Map (45s)
+- Navigate to Map tab
+- Show route polyline with stop markers
+- Show animated bus marker at last pinged stop
+- Show your-stop highlighted in green
+- Drag bottom sheet to see ETA details
+
+### Step 6: Issue Report (30s)
+- Tap "Report Issue" → select "Breakdown"
+- Show red alert banner appearing
+- Explain auto-expiry after 2 hours
+
+### Step 7: Safe Reach (30s)
+- Navigate to Safe Reach
+- Tap "I Reached Safely"
+- Show Lottie celebration animation
+- Explain SMS sent to parent's phone
+
+### Step 8: Dark Mode (15s)
+- Go to Profile → Settings → Toggle Dark Mode
+- Show entire app in dark theme
+
+### Step 9: Offline Mode (15s)
+- Enable airplane mode
+- Show "You're offline" banner
+- Show cached data still displayed
+- Ping queued for when back online
 
 ---
 
-## ⚠️ Problems & Exact Fixes
+## ✅ Professional Quality Checklist
 
-| Problem | Exact Fix |
-|---|---|
-| `google-services.json` plugin error | Add `id("com.google.gms.google-services")` to BOTH `build.gradle.kts` files |
-| Map shows grey / blank | SHA-1 in Google Cloud Console must match `./gradlew signingReport` output exactly |
-| OTP never received | Test on real device only — Android emulator has no SIM card |
-| Firebase write fails silently | Set Rules to `".write": true` for debug only, revert before launch |
-| App crashes offline | `FirebaseDatabase.getInstance().setPersistenceEnabled(true)` must come BEFORE any DB calls |
-| FCM notification not appearing | App must not be force-stopped; test via Firebase Console → Cloud Messaging |
-| SMS not sending | Declare `<uses-permission android:name="android.permission.SEND_SMS"/>` and request at runtime |
-| Firebase ClassCastException | All data class fields need default values: `val name: String = ""` not `val name: String` |
-| Bus marker not updating | Call `busMarker?.remove()` before `googleMap.addMarker()` each time |
-| Map camera not showing full route | Use `LatLngBounds.Builder()` then `CameraUpdateFactory.newLatLngBounds(bounds, 100)` |
+| Category | Requirement | Implementation |
+|----------|-------------|----------------|
+| **Auth** | Email Sign Up | Firebase createUserWithEmailAndPassword |
+| **Auth** | Email Sign In | Firebase signInWithEmailAndPassword |
+| **Auth** | Google Sign-In | Google One-Tap + Firebase credential |
+| **Auth** | Forgot Password | Firebase sendPasswordResetEmail |
+| **Auth** | Auto Sign-In | Check currentUser on app launch |
+| **UI** | Material Design 3 | Material Components library |
+| **UI** | Dark Mode | values-night resources + toggle |
+| **UI** | Lottie Animations | 5+ animations (splash, success, empty, loading) |
+| **UI** | Shimmer Loading | Facebook Shimmer on all data screens |
+| **UI** | Micro-Animations | Button scale, card elevation, transitions |
+| **UX** | Haptic Feedback | HapticHelper on all primary actions |
+| **UX** | Pull-to-Refresh | SwipeRefreshLayout on Home |
+| **UX** | Error Messages | User-friendly, not Firebase codes |
+| **UX** | Onboarding | 3-screen carousel, shown once |
+| **Core** | Real-Time Ping | Firebase listener, < 2s propagation |
+| **Core** | ETA Calculation | ETACalculator with countdown timer |
+| **Core** | Map Tracking | Google Maps + polyline + markers |
+| **Core** | Issue Reporting | 4 issue types, alert banner |
+| **Core** | Safe Reach | FCM + SMS dual notification |
+| **Core** | Demo Mode | Built-in bus simulator |
+| **Offline** | Persistence | Firebase offline cache enabled |
+| **Offline** | Network Banner | ConnectivityManager monitor |
+| **Arch** | MVVM | ViewModel + LiveData |
+| **Arch** | Clean Architecture | UseCases + Repository pattern |
+| **Arch** | Dependency Injection | Hilt modules |
 
 ---
 
-## 🚀 Quick Start Checklist — Do These First
+## ⚠️ Known Issues & Fixes
+
+| Problem | Fix |
+|---------|-----|
+| Google Sign-In fails | Add both SHA-1 AND SHA-256 to Firebase project settings |
+| Email auth error "account exists" | Enable Email Enumeration Protection in Firebase |
+| Lottie not rendering | Ensure .json files in res/raw, not assets |
+| Shimmer persists | Stop shimmer in onDataLoaded callback |
+| Dark mode flickers | Use AppCompatDelegate.setDefaultNightMode() in Application |
+| Hilt "entry point" crash | Ensure @AndroidEntryPoint on Activity AND Fragments |
+| Map blank | Verify SHA-1 matches, Maps SDK enabled in Cloud Console |
+| FCM token null | Request notification permission on Android 13+ |
+| SMS permission denied | Request SEND_SMS at runtime, show rationale dialog |
+| Offline ping lost | Firebase persistence queues writes automatically |
+
+---
+
+## 📚 Reference Repositories
+
+| Repository | What to Learn |
+|-----------|---------------|
+| [android/nowinandroid](https://github.com/android/nowinandroid) | Gold standard architecture, M3, modularization |
+| [android/architecture-samples](https://github.com/android/architecture-samples) | MVVM patterns, testing |
+| [OneBusAway/onebusaway-android](https://github.com/OneBusAway/onebusaway-android) | Production transit app patterns |
+| [javdc/TussApp](https://github.com/javdc/TussApp) | Modern transit app with Clean Architecture |
+| [airbnb/lottie-android](https://github.com/airbnb/lottie-android) | Animation implementation |
+| [facebook/shimmer-android](https://github.com/facebook/shimmer-android) | Shimmer loading effects |
+
+---
+
+## 🚀 Quick Start (First 30 Minutes)
 
 ```
-Step 1  → Install Android Studio from developer.android.com
-Step 2  → Go to console.firebase.google.com → Create project "vidya-vahini"
-Step 3  → Enable: Authentication (Phone), Realtime Database (Test Mode), Cloud Messaging
-Step 4  → Add Android app → package name: com.vidyavahini.app → download google-services.json
-Step 5  → Go to console.cloud.google.com → Enable "Maps SDK for Android"
-Step 6  → Create API Key → copy it
-Step 7  → Open Android Studio → New Project → Empty Views Activity → package: com.vidyavahini.app
-Step 8  → Copy google-services.json into the app/ folder
-Step 9  → Add MAPS_API_KEY to local.properties
-Step 10 → Paste all dependencies from this plan into build.gradle.kts
-Step 11 → Add .gitignore file (copy from this plan)
-Step 12 → Sync project → Run on emulator → if it builds, start Week 1 Day 1!
+1. Install Android Studio Hedgehog (latest)
+2. Firebase Console → Create "vidya-vahini" project
+3. Enable: Auth (Email + Google), Realtime DB, Cloud Messaging
+4. Add Android app → package: com.vidyavahini.app
+5. Download google-services.json → app/ folder
+6. Google Cloud Console → Enable Maps SDK → Create API Key
+7. local.properties → add MAPS_API_KEY=your_key
+8. Paste dependencies from this plan → Sync Gradle
+9. Run app → verify splash screen loads
+10. Start Week 1 Day 1!
 ```
 
 ---
 
-*Vidya-Vahini | Project #101 | Complete Validated Plan*
-*All 3 validation gaps fixed: Route Line code + Firebase scale math + SMS fallback*
+## 🎯 What This Delivers for Demo
+
+1. **Professional Auth** — Email/Password + Google Sign-In (not just phone OTP)
+2. **Stunning UI** — Material 3 + Dark Mode + Lottie + Shimmer (not basic layouts)
+3. **Real BMTC Data** — 50 Bangalore routes pre-loaded (not manual entry)
+4. **Working Demo** — Built-in simulator moves bus in real-time (no real users needed)
+5. **Full Feature Set** — Ping, Map, ETA, Issues, Safe Reach, Offline (all functional)
+6. **Production Architecture** — MVVM + Clean Architecture + Hilt (not spaghetti code)
+
+---
+
+*Vidya-Vahini v2.0 | Project #101 | Professional-Grade Plan*  
+*Architecture: MVVM + Clean Architecture + Hilt DI*  
+*UI: Material Design 3 + Lottie + Shimmer + Dark Mode*  
+*Inspired by: NowInAndroid, OneBusAway, TussApp*
