@@ -30,12 +30,16 @@ import com.vidyavahini.app.utils.NotificationHelper
  */
 import dagger.hilt.android.AndroidEntryPoint
 
+import javax.inject.Inject
+
 @AndroidEntryPoint
 class SafeReachFragment : Fragment() {
 
     private var _binding: FragmentSafeReachBinding? = null
     private val binding get() = _binding!!
-    private val repository = FirebaseRepository()
+    
+    @Inject
+    lateinit var repository: FirebaseRepository
 
     private var studentName = ""
     private var parentPhone = ""

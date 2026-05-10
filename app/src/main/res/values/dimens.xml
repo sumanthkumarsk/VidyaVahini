@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spacing -->
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+
+    <!-- Buttons -->
+    <dimen name="button_corner_radius">28dp</dimen>
+    <dimen name="button_height">52dp</dimen>
+
+    <!-- Inputs -->
+    <dimen name="input_corner_radius">12dp</dimen>
+
+    <!-- Screens -->
+    <dimen name="screen_padding">20dp</dimen>
+    <dimen name="section_spacing">16dp</dimen>
+    <dimen name="bottom_nav_height">64dp</dimen>
+</resources>

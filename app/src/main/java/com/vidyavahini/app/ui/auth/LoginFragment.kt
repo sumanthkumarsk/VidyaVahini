@@ -14,10 +14,13 @@ import com.vidyavahini.app.R
 import com.vidyavahini.app.databinding.FragmentLoginBinding
 import com.vidyavahini.app.viewmodel.AuthViewModel
 
+import dagger.hilt.android.AndroidEntryPoint
+
 /**
  * LoginFragment — entry point for unauthenticated users.
  * Collects a phone number with country code and triggers OTP dispatch.
  */
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null

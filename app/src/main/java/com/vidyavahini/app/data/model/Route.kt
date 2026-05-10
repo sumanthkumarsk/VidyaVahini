@@ -6,5 +6,10 @@ package com.vidyavahini.app.data.model
  */
 data class Route(
     val name: String = "",
-    val stops: Map<String, Stop> = emptyMap()
+    val stops: Map<String, Stop> = emptyMap(),
+    val frequency: String = "Every 15 min",
+    val firstBus: String = "06:30 AM",
+    val lastBus: String = "09:00 PM",
+    val college: String = "",
+    val routeNumber: String = ""
 )

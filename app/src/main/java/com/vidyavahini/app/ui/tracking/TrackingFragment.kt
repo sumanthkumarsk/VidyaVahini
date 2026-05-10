@@ -22,28 +22,32 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.material.snackbar.Snackbar
 import com.vidyavahini.app.R
 import com.vidyavahini.app.data.model.Route
 import com.vidyavahini.app.databinding.FragmentTrackingBinding
-import com.vidyavahini.app.viewmodel.TrackingViewModel
-
-/**
- * TrackingFragment — the map screen.
- * Shows the full route polyline, stop markers, live bus position, and ETA info.
- * Uses a dark map style to match the app's premium dark theme.
- */
+import com.vidyavahini.app.ui.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * TrackingFragment — the live map screen.
+ * Shows full BMTC route polyline, stop markers, animated bus position, and ETA info.
+ * Bus position updates automatically from HomeViewModel (real pings OR demo simulation).
+ */
 @AndroidEntryPoint
 class TrackingFragment : Fragment(), OnMapReadyCallback {
 
     private var _binding: FragmentTrackingBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: TrackingViewModel by viewModels()
+
+    // Shared ViewModel — same instance as HomeFragment for live ping updates
+    private val viewModel: HomeViewModel by viewModels()
 
     private var googleMap: GoogleMap? = null
-    private var busMarker: Marker? = null
+    private var busMarker: Marker?    = null
     private var myStopId = ""
+    private var routeId  = ""
+    private var stopOrder = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -56,29 +60,30 @@ class TrackingFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         val prefs   = requireContext().getSharedPreferences("vidya", Context.MODE_PRIVATE)
-        val routeId = prefs.getString("routeId", "") ?: ""
-        myStopId    = prefs.getString("stopId",  "") ?: ""
-        val order   = prefs.getInt("stopOrder", 1)
+        routeId     = prefs.getString("routeId", "route_401d") ?: "route_401d"
+        myStopId    = prefs.getString("stopId", "stop_05") ?: "stop_05"
+        stopOrder   = prefs.getInt("stopOrder", 5)
 
-        // Initialize the map
+        // Initialize Google Maps
         (childFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment)
             .getMapAsync(this)
 
         viewModel.loadRoute(routeId)
-        viewModel.startListening(routeId, order)
+        viewModel.startListening(routeId, stopOrder)
         observeViewModel()
 
-        // Ping button on the map screen
+        // Ping button on map screen
         binding.btnPingMap.setOnClickListener {
             viewModel.pingBus(myStopId)
-            val pulseAnim = AnimationUtils.loadAnimation(requireContext(), R.anim.ping_pulse)
-            binding.btnPingMap.startAnimation(pulseAnim)
-            binding.btnPingMap.text = "✅ Pinged!"
+            val anim = AnimationUtils.loadAnimation(requireContext(), R.anim.ping_pulse)
+            binding.btnPingMap.startAnimation(anim)
+            binding.btnPingMap.text      = "✅ Pinged!"
             binding.btnPingMap.isEnabled = false
+            Snackbar.make(binding.root, "Bus pinged at your stop!", Snackbar.LENGTH_SHORT).show()
             binding.btnPingMap.postDelayed({
-                _binding?.btnPingMap?.text = "🚌 PING"
+                _binding?.btnPingMap?.text      = "🚌 PING"
                 _binding?.btnPingMap?.isEnabled = true
-            }, 120_000L)
+            }, 30_000L)
         }
     }
 
@@ -86,19 +91,32 @@ class TrackingFragment : Fragment(), OnMapReadyCallback {
         viewModel.etaText.observe(viewLifecycleOwner) { binding.tvEta.text = it }
 
         viewModel.latestPing.observe(viewLifecycleOwner) { ping ->
-            val map = googleMap ?: return@observe
+            if (ping == null) return@observe
+            val map  = googleMap ?: return@observe
             val stop = viewModel.currentRoute.value?.stops?.get(ping.stopId) ?: return@observe
 
-            // Move the bus marker to the latest pinged stop
+            // Smoothly move bus marker to the latest pinged stop
             busMarker?.remove()
             busMarker = map.addMarker(
                 MarkerOptions()
                     .position(LatLng(stop.lat, stop.lng))
-                    .title("🚌 Bus is here: ${stop.name}")
+                    .title("🚌 Bus here: ${stop.name}")
+                    .snippet("Stop ${stop.order} of ${viewModel.currentRoute.value?.stops?.size}")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                    .zIndex(2f)
+                    .zIndex(3f)
             )
-            binding.tvLastPing.text = "Last seen: ${stop.name}"
+            busMarker?.showInfoWindow()
+            binding.tvLastPing.text = "Bus at: ${stop.name}"
+
+            // Auto-zoom to show bus + student's stop
+            val myStop = viewModel.currentRoute.value?.stops?.get(myStopId)
+            if (myStop != null) {
+                val bounds = LatLngBounds.Builder()
+                    .include(LatLng(stop.lat, stop.lng))
+                    .include(LatLng(myStop.lat, myStop.lng))
+                    .build()
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
+            }
         }
 
         viewModel.breakdown.observe(viewLifecycleOwner) { b ->
@@ -107,33 +125,39 @@ class TrackingFragment : Fragment(), OnMapReadyCallback {
         }
 
         viewModel.currentRoute.observe(viewLifecycleOwner) { route ->
-            googleMap?.let { drawRouteLine(it, route, myStopId) }
+            googleMap?.let { map ->
+                drawRouteLine(map, route, myStopId)
+                centerCameraOnRoute(map, route)
+            }
         }
     }
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
 
-        // Apply dark theme to map
+        // Apply dark map style
         try {
             val style = MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style_dark)
             map.setMapStyle(style)
         } catch (e: Exception) {
-            Log.e("TrackingFragment", "Failed to load dark map style: ${e.message}")
+            Log.w("TrackingFragment", "Dark map style not loaded: ${e.message}")
         }
 
-        map.uiSettings.isZoomControlsEnabled    = true
-        map.uiSettings.isCompassEnabled         = true
-        map.uiSettings.isMapToolbarEnabled      = false
+        map.uiSettings.isZoomControlsEnabled = true
+        map.uiSettings.isCompassEnabled      = true
+        map.uiSettings.isMapToolbarEnabled   = false
         map.mapType = GoogleMap.MAP_TYPE_NORMAL
 
-        // Draw route line once map is ready and route data is available
-        viewModel.currentRoute.value?.let { drawRouteLine(map, it, myStopId) }
+        // Draw route if data already available
+        viewModel.currentRoute.value?.let { route ->
+            drawRouteLine(map, route, myStopId)
+            centerCameraOnRoute(map, route)
+        }
     }
 
     /**
-     * Draws the full route as a blue polyline with circle + pin markers at each stop.
-     * The student's boarding stop is highlighted in a different color.
+     * Draws the route as a blue polyline with circular stop markers.
+     * Student's stop = green highlight. Other stops = blue circles.
      */
     private fun drawRouteLine(map: GoogleMap, route: Route, studentStopId: String) {
         map.clear()
@@ -141,19 +165,18 @@ class TrackingFragment : Fragment(), OnMapReadyCallback {
 
         val sortedStops = route.stops.entries.sortedBy { it.value.order }
         val latLngs     = sortedStops.map { LatLng(it.value.lat, it.value.lng) }
-
         if (latLngs.size < 2) return
 
-        // ── Blue route polyline ──────────────────────────────────────────────
+        // Route polyline — blue gradient
         map.addPolyline(
             PolylineOptions()
                 .addAll(latLngs)
                 .color(Color.parseColor("#5E92F3"))
-                .width(12f)
+                .width(14f)
                 .geodesic(true)
         )
 
-        // ── Stop markers ─────────────────────────────────────────────────────
+        // Stop markers
         sortedStops.forEach { (stopId, stop) ->
             val isMyStop = (stopId == studentStopId)
 
@@ -161,43 +184,61 @@ class TrackingFragment : Fragment(), OnMapReadyCallback {
             map.addCircle(
                 CircleOptions()
                     .center(LatLng(stop.lat, stop.lng))
-                    .radius(200.0)
+                    .radius(120.0)
                     .fillColor(
-                        if (isMyStop) Color.parseColor("#80FF6D00")  // orange fill for my stop
-                        else Color.parseColor("#805E92F3")           // light blue for others
+                        if (isMyStop) Color.parseColor("#8000C853")  // green for my stop
+                        else Color.parseColor("#805E92F3")            // blue for others
                     )
                     .strokeColor(
-                        if (isMyStop) Color.parseColor("#FF6D00")
+                        if (isMyStop) Color.parseColor("#00C853")
                         else Color.parseColor("#5E92F3")
                     )
-                    .strokeWidth(4f)
+                    .strokeWidth(5f)
                     .zIndex(1f)
             )
 
-            // Pin marker
+            // Pin marker with stop number
             map.addMarker(
                 MarkerOptions()
                     .position(LatLng(stop.lat, stop.lng))
-                    .title("Stop ${stop.order}: ${stop.name}${if (isMyStop) " (Your Stop)" else ""}")
+                    .title("Stop ${stop.order}: ${stop.name}${if (isMyStop) " ★ YOUR STOP" else ""}")
+                    .snippet("Tap for stop details")
                     .icon(
                         BitmapDescriptorFactory.defaultMarker(
                             if (isMyStop) BitmapDescriptorFactory.HUE_GREEN
                             else BitmapDescriptorFactory.HUE_AZURE
                         )
                     )
+                    .zIndex(2f)
             )
         }
 
-        // ── Auto-zoom camera to show the entire route ─────────────────────
-        if (latLngs.isNotEmpty()) {
-            val bounds = LatLngBounds.Builder().apply { latLngs.forEach { include(it) } }.build()
-            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 120))
+        // Re-add bus marker at last known position
+        viewModel.latestPing.value?.let { ping ->
+            val stop = route.stops[ping.stopId] ?: return@let
+            busMarker = map.addMarker(
+                MarkerOptions()
+                    .position(LatLng(stop.lat, stop.lng))
+                    .title("🚌 Bus here: ${stop.name}")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                    .zIndex(3f)
+            )
         }
+    }
+
+    private fun centerCameraOnRoute(map: GoogleMap, route: Route) {
+        val stops = route.stops.values.toList()
+        if (stops.isEmpty()) return
+        val builder = LatLngBounds.Builder()
+        stops.forEach { builder.include(LatLng(it.lat, it.lng)) }
+        try {
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 150))
+        } catch (_: Exception) {}
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         googleMap = null
-        _binding = null
+        _binding  = null
     }
 }

@@ -25,4 +25,35 @@
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
     <color name="shimmer_color">#E0E0E0</color>
+
+    <!-- Brand Colors (Deep Transit Blue & Vibrant Amber) -->
+    <color name="primary_blue">#1565C0</color>
+    <color name="primary_blue_dark">#0D47A1</color>
+    <color name="primary_blue_light">#42A5F5</color>
+
+    <color name="accent_amber">#FF8F00</color>
+    <color name="accent_amber_light">#FFB300</color>
+
+    <!-- UI Backgrounds -->
+    <color name="bg_main">#FAFAFA</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="bg_deep">#0A192F</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#1B1B1F</color>
+    <color name="text_secondary">#49454F</color>
+    <color name="text_hint">#79747E</color>
+    <color name="text_on_dark">#FFFFFF</color>
+
+    <!-- Action Colors -->
+    <color name="status_success">#2E7D32</color>
+    <color name="status_error">#B00020</color>
+    <color name="status_warning">#EF6C00</color>
+    <color name="status_info">#0288D1</color>
+    <!-- Legacy compatibility (can be removed after updating layouts) -->
+    <color name="primary_orange">@color/accent_amber</color>
+    <color name="status_on_time">@color/status_success</color>
+    <color name="status_arriving">#FFD600</color>
+    <color name="status_soon">#FF9100</color>
+    <color name="status_passed">#757575</color>
 </resources>

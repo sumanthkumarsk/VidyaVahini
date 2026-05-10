@@ -6,8 +6,10 @@ package com.vidyavahini.app.data.model
  */
 data class Student(
     val name: String = "",
+    val college: String = "",
     val routeId: String = "",
     val stopId: String = "",
     val parentPhone: String = "",
-    val fcmToken: String = ""
+    val fcmToken: String = "",
+    val profileComplete: Boolean = false
 )

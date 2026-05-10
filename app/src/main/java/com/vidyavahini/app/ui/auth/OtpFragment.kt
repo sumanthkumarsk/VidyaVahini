@@ -14,10 +14,13 @@ import com.vidyavahini.app.R
 import com.vidyavahini.app.databinding.FragmentOtpBinding
 import com.vidyavahini.app.viewmodel.AuthViewModel
 
+import dagger.hilt.android.AndroidEntryPoint
+
 /**
  * OtpFragment — receives the 6-digit OTP and verifies it with Firebase.
  * Navigates to RegisterFragment on first login, HomeFragment for returning users.
  */
+@AndroidEntryPoint
 class OtpFragment : Fragment() {
 
     private var _binding: FragmentOtpBinding? = null

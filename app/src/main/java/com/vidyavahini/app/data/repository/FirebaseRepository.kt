@@ -8,18 +8,120 @@ import com.google.firebase.database.ValueEventListener
 import com.vidyavahini.app.data.model.Breakdown
 import com.vidyavahini.app.data.model.BusPing
 import com.vidyavahini.app.data.model.Route
+import com.vidyavahini.app.data.model.Stop
 import com.vidyavahini.app.data.model.Student
+import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Single source of truth for all Firebase Realtime Database operations.
  * All reads/writes pass through this class — ViewModels never touch Firebase directly.
  */
-class FirebaseRepository {
+@Singleton
+class FirebaseRepository @Inject constructor(
+    private val firebaseDatabase: FirebaseDatabase,
+    private val auth: FirebaseAuth
+) {
+    private val db = firebaseDatabase.reference
 
-    private val db   = FirebaseDatabase.getInstance("https://vidya-vahini-20c3d-default-rtdb.asia-southeast1.firebasedatabase.app").reference
-    private val auth = FirebaseAuth.getInstance()
+    // ── Dummy BMTC Data (used if Firebase is empty) ──────────────────────────
 
-    // ── Student ─────────────────────────────────────────────────────────────
+    private fun getDummyRoutes(): Map<String, Route> = mapOf(
+        "route_401d" to Route(
+            routeNumber = "401D",
+            name = "401D: KBS → BMS College Express",
+            college = "BMS College of Engineering",
+            frequency = "Every 15 min",
+            firstBus = "06:30 AM",
+            lastBus = "09:00 PM",
+            stops = mapOf(
+                "stop_01" to Stop("Kempegowda Bus Station", 12.9779, 77.5713, 1),
+                "stop_02" to Stop("Majestic Metro", 12.9766, 77.5713, 2),
+                "stop_03" to Stop("Anand Rao Circle", 12.9850, 77.5720, 3),
+                "stop_04" to Stop("Race Course Road", 12.9890, 77.5680, 4),
+                "stop_05" to Stop("Seshadripuram", 12.9920, 77.5740, 5),
+                "stop_06" to Stop("Basavanagudi", 12.9435, 77.5710, 6),
+                "stop_07" to Stop("Bull Temple Road", 12.9430, 77.5680, 7),
+                "stop_08" to Stop("BMS College Gate", 12.9410, 77.5650, 8)
+            )
+        ),
+        "route_500ca" to Route(
+            routeNumber = "500CA",
+            name = "500CA: Electronic City → RV College",
+            college = "RV College of Engineering",
+            frequency = "Every 20 min",
+            firstBus = "06:00 AM",
+            lastBus = "08:30 PM",
+            stops = mapOf(
+                "stop_01" to Stop("Electronic City Phase 1", 12.8456, 77.6603, 1),
+                "stop_02" to Stop("Infosys Gate", 12.8440, 77.6580, 2),
+                "stop_03" to Stop("Bommanahalli", 12.8890, 77.6240, 3),
+                "stop_04" to Stop("BTM Layout", 12.9166, 77.6101, 4),
+                "stop_05" to Stop("Silk Board Junction", 12.9177, 77.6233, 5),
+                "stop_06" to Stop("Jayanagar 4th Block", 12.9250, 77.5830, 6),
+                "stop_07" to Stop("South End Circle", 12.9370, 77.5750, 7),
+                "stop_08" to Stop("RV College of Engineering", 12.9237, 77.4987, 8)
+            )
+        ),
+        "route_335e" to Route(
+            routeNumber = "335E",
+            name = "335E: Whitefield → PES University",
+            college = "PES University",
+            frequency = "Every 25 min",
+            firstBus = "06:15 AM",
+            lastBus = "08:00 PM",
+            stops = mapOf(
+                "stop_01" to Stop("Whitefield Bus Stand", 12.9698, 77.7500, 1),
+                "stop_02" to Stop("ITPL Main Road", 12.9854, 77.7310, 2),
+                "stop_03" to Stop("Marathahalli Bridge", 12.9591, 77.7019, 3),
+                "stop_04" to Stop("KR Puram Railway", 12.9969, 77.6970, 4),
+                "stop_05" to Stop("Tin Factory", 12.9935, 77.6620, 5),
+                "stop_06" to Stop("Indiranagar", 12.9784, 77.6408, 6),
+                "stop_07" to Stop("MG Road", 12.9756, 77.6095, 7),
+                "stop_08" to Stop("PES University", 12.9344, 77.5350, 8)
+            )
+        ),
+        "route_500d" to Route(
+            routeNumber = "500D",
+            name = "500D: Silk Board → Hebbal",
+            college = "General / Multi-college",
+            frequency = "Every 15 min",
+            firstBus = "05:30 AM",
+            lastBus = "10:00 PM",
+            stops = mapOf(
+                "stop_01" to Stop("Central Silk Board", 12.9176, 77.6238, 1),
+                "stop_02" to Stop("HSR Layout", 12.9121, 77.6446, 2),
+                "stop_03" to Stop("Agara Junction", 12.9234, 77.6501, 3),
+                "stop_04" to Stop("Bellandur Gate", 12.9274, 77.6698, 4),
+                "stop_05" to Stop("Marathahalli Bridge", 12.9553, 77.6984, 5),
+                "stop_06" to Stop("Kalyan Nagar", 13.0280, 77.6399, 6),
+                "stop_07" to Stop("Hebbal", 13.0354, 77.5988, 7)
+            )
+        )
+    )
+
+    // ── Seeding ─────────────────────────────────────────────────────────────
+
+    /**
+     * Seeds dummy BMTC routes if the routes node is empty.
+     * Safe to call on every app start — checks before writing.
+     */
+    fun seedRoutesIfEmpty(onDone: () -> Unit = {}) {
+        db.child("routes").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (!snapshot.exists() || snapshot.childrenCount == 0L) {
+                    db.child("routes").setValue(getDummyRoutes())
+                        .addOnCompleteListener { onDone() }
+                } else {
+                    onDone()
+                }
+            }
+            override fun onCancelled(error: DatabaseError) { onDone() }
+        })
+    }
+
+    // ── Student ──────────────────────────────────────────────────────────────
 
     fun saveStudent(student: Student) {
         val uid = auth.currentUser?.uid ?: return
@@ -27,32 +129,36 @@ class FirebaseRepository {
             .addOnFailureListener { e -> android.util.Log.e("FirebaseRepo", "Error saving student", e) }
     }
 
-    /** Fetches the student profile once (not a real-time listener). */
     fun getStudent(onResult: (Student?) -> Unit) {
         val uid = auth.currentUser?.uid ?: return onResult(null)
         db.child("students").child(uid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snap: DataSnapshot) {
-                    onResult(snap.getValue(Student::class.java))
-                }
+                override fun onDataChange(snap: DataSnapshot) { onResult(snap.getValue(Student::class.java)) }
                 override fun onCancelled(e: DatabaseError) { onResult(null) }
             })
     }
 
     // ── Route ────────────────────────────────────────────────────────────────
 
-    /** Fetches a single route object by its ID. */
     fun getRoute(routeId: String, onResult: (Route?) -> Unit) {
+        // Try Firebase first; fall back to local dummy data
         db.child("routes").child(routeId)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snap: DataSnapshot) {
-                    onResult(snap.getValue(Route::class.java))
+                    val route = snap.getValue(Route::class.java)
+                    if (route != null) {
+                        onResult(route)
+                    } else {
+                        // Local fallback — works completely offline/no Firebase
+                        onResult(getDummyRoutes()[routeId] ?: getDummyRoutes().values.firstOrNull())
+                    }
                 }
-                override fun onCancelled(e: DatabaseError) { onResult(null) }
+                override fun onCancelled(e: DatabaseError) {
+                    onResult(getDummyRoutes()[routeId] ?: getDummyRoutes().values.firstOrNull())
+                }
             })
     }
 
-    /** Fetches all available routes — used in RegisterFragment dropdown. */
     fun getAllRoutes(onResult: (Map<String, Route>) -> Unit) {
         db.child("routes")
             .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -61,64 +167,31 @@ class FirebaseRepository {
                     snap.children.forEach { child ->
                         child.getValue(Route::class.java)?.let { map[child.key!!] = it }
                     }
-                    onResult(map)
+                    // Always include dummy routes as fallback
+                    val result = if (map.isEmpty()) getDummyRoutes() else map
+                    onResult(result)
                 }
-                override fun onCancelled(e: DatabaseError) { onResult(emptyMap()) }
+                override fun onCancelled(e: DatabaseError) { onResult(getDummyRoutes()) }
             })
     }
 
-    /** Seeds dummy BMTC routes into Firebase for testing if database is empty. */
-    fun seedDummyRoutes(onComplete: () -> Unit) {
-        val dummyRoutes = mapOf(
-            "route_500d" to Route(
-                name = "500-D: Central Silk Board → Hebbal",
-                stops = mapOf(
-                    "stop_01" to com.vidyavahini.app.data.model.Stop("Central Silk Board", 12.9176, 77.6238, 1),
-                    "stop_02" to com.vidyavahini.app.data.model.Stop("HSR Layout", 12.9121, 77.6446, 2),
-                    "stop_03" to com.vidyavahini.app.data.model.Stop("Agara Junction", 12.9234, 77.6501, 3),
-                    "stop_04" to com.vidyavahini.app.data.model.Stop("Bellandur Gate", 12.9274, 77.6698, 4),
-                    "stop_05" to com.vidyavahini.app.data.model.Stop("Marathahalli Bridge", 12.9553, 77.6984, 5),
-                    "stop_06" to com.vidyavahini.app.data.model.Stop("Kalyan Nagar", 13.0280, 77.6399, 6),
-                    "stop_07" to com.vidyavahini.app.data.model.Stop("Hebbal", 13.0354, 77.5988, 7)
-                )
-            ),
-            "route_335e" to Route(
-                name = "335-E: Majestic → Kadugodi",
-                stops = mapOf(
-                    "stop_01" to com.vidyavahini.app.data.model.Stop("Majestic (KBS)", 12.9766, 77.5713, 1),
-                    "stop_02" to com.vidyavahini.app.data.model.Stop("Corporation Circle", 12.9664, 77.5872, 2),
-                    "stop_03" to com.vidyavahini.app.data.model.Stop("Domlur TTMC", 12.9609, 77.6385, 3),
-                    "stop_04" to com.vidyavahini.app.data.model.Stop("HAL Main Gate", 12.9575, 77.6635, 4),
-                    "stop_05" to com.vidyavahini.app.data.model.Stop("Kundalahalli Gate", 12.9654, 77.7188, 5),
-                    "stop_06" to com.vidyavahini.app.data.model.Stop("ITPL", 12.9863, 77.7373, 6),
-                    "stop_07" to com.vidyavahini.app.data.model.Stop("Kadugodi", 12.9984, 77.7610, 7)
-                )
-            ),
-            "route_kia8" to Route(
-                name = "KIA-8: Electronic City → KIAL Airport",
-                stops = mapOf(
-                    "stop_01" to com.vidyavahini.app.data.model.Stop("Electronic City", 12.8488, 77.6685, 1),
-                    "stop_02" to com.vidyavahini.app.data.model.Stop("Bommanahalli", 12.9022, 77.6241, 2),
-                    "stop_03" to com.vidyavahini.app.data.model.Stop("Silk Board", 12.9176, 77.6238, 3),
-                    "stop_04" to com.vidyavahini.app.data.model.Stop("Tin Factory", 12.9942, 77.6661, 4),
-                    "stop_05" to com.vidyavahini.app.data.model.Stop("Hebbal", 13.0354, 77.5988, 5),
-                    "stop_06" to com.vidyavahini.app.data.model.Stop("KIAL Airport", 13.1989, 77.7068, 6)
-                )
-            )
-        )
-        db.child("routes").setValue(dummyRoutes).addOnCompleteListener {
-            onComplete()
+    suspend fun getAllRoutesAsync(): Map<String, Route> {
+        return try {
+            val snapshot = db.child("routes").get().await()
+            val map = mutableMapOf<String, Route>()
+            snapshot.children.forEach { child ->
+                child.getValue(Route::class.java)?.let { map[child.key!!] = it }
+            }
+            if (map.isEmpty()) getDummyRoutes() else map
+        } catch (e: Exception) {
+            getDummyRoutes()
         }
     }
 
     // ── Ping ─────────────────────────────────────────────────────────────────
 
-    /**
-     * Writes a new ping to Firebase.
-     * This is the core crowdsourced action — one student pings, all see it.
-     */
     fun pingBus(routeId: String, stopId: String) {
-        val uid = auth.currentUser?.uid ?: return
+        val uid = auth.currentUser?.uid ?: "demo_user"
         val ping = BusPing(
             stopId    = stopId,
             timestamp = System.currentTimeMillis(),
@@ -126,13 +199,9 @@ class FirebaseRepository {
             status    = "on_time"
         )
         db.child("pings").child(routeId).child("latest").setValue(ping)
-            .addOnFailureListener { e -> android.util.Log.e("FirebaseRepo", "Error pinging bus", e) }
+            .addOnFailureListener { e -> android.util.Log.e("FirebaseRepo", "Ping error", e) }
     }
 
-    /**
-     * Attaches a real-time listener to the latest ping for a route.
-     * Returns the listener so the caller can remove it in onCleared().
-     */
     fun listenForPings(routeId: String, onUpdate: (BusPing) -> Unit): ValueEventListener {
         val listener = object : ValueEventListener {
             override fun onDataChange(snap: DataSnapshot) {
@@ -144,16 +213,14 @@ class FirebaseRepository {
         return listener
     }
 
-    /** Removes the ping listener to prevent memory leaks when the ViewModel is cleared. */
     fun removePingListener(routeId: String, listener: ValueEventListener) {
         db.child("pings").child(routeId).child("latest").removeEventListener(listener)
     }
 
     // ── Breakdown ────────────────────────────────────────────────────────────
 
-    /** Reports a breakdown for a route, alerting all students on that route. */
     fun reportBreakdown(routeId: String, message: String) {
-        val uid = auth.currentUser?.uid ?: return
+        val uid = auth.currentUser?.uid ?: "demo_user"
         val breakdown = Breakdown(
             active     = true,
             reportedBy = uid,
@@ -161,53 +228,40 @@ class FirebaseRepository {
             message    = message
         )
         db.child("breakdowns").child(routeId).setValue(breakdown)
-            .addOnFailureListener { e -> android.util.Log.e("FirebaseRepo", "Error reporting breakdown", e) }
     }
 
-    /** Clears an active breakdown — can be called by route admin or auto-timeout. */
     fun clearBreakdown(routeId: String) {
-        val uid = auth.currentUser?.uid ?: return
-        val cleared = Breakdown(
-            active     = false,
-            reportedBy = uid,
-            timestamp  = System.currentTimeMillis(),
-            message    = ""
+        val uid = auth.currentUser?.uid ?: "demo_user"
+        db.child("breakdowns").child(routeId).setValue(
+            Breakdown(active = false, reportedBy = uid, timestamp = System.currentTimeMillis(), message = "")
         )
-        db.child("breakdowns").child(routeId).setValue(cleared)
-            .addOnFailureListener { e -> android.util.Log.e("FirebaseRepo", "Error clearing breakdown", e) }
     }
 
-    /** Real-time listener for breakdown events on a route. */
     fun listenForBreakdown(routeId: String, onUpdate: (Breakdown?) -> Unit) {
         db.child("breakdowns").child(routeId)
             .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snap: DataSnapshot) {
-                    onUpdate(snap.getValue(Breakdown::class.java))
-                }
+                override fun onDataChange(snap: DataSnapshot) { onUpdate(snap.getValue(Breakdown::class.java)) }
                 override fun onCancelled(e: DatabaseError) { onUpdate(null) }
             })
     }
 
     // ── FCM Token ────────────────────────────────────────────────────────────
 
-    /** Updates the FCM token in the student's Firebase node — called when token refreshes. */
     fun updateFcmToken(token: String) {
         val uid = auth.currentUser?.uid ?: return
         db.child("students").child(uid).child("fcmToken").setValue(token)
-            .addOnFailureListener { e -> android.util.Log.e("FirebaseRepo", "Error updating FCM token", e) }
     }
 
     // ── Safe Reach ───────────────────────────────────────────────────────────
 
-    /** Marks that a student has safely reached college — triggers parent notification. */
     fun markSafeReach(studentName: String) {
-        val uid = auth.currentUser?.uid ?: return
+        val uid = auth.currentUser?.uid ?: "demo_user"
         db.child("safereach").child(uid).setValue(
             mapOf(
                 "studentName" to studentName,
                 "timestamp"   to System.currentTimeMillis(),
                 "reached"     to true
             )
-        ).addOnFailureListener { e -> android.util.Log.e("FirebaseRepo", "Error marking safe reach", e) }
+        )
     }
 }

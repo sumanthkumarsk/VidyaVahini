@@ -8,23 +8,31 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.vidyavahini.app.R
 import com.vidyavahini.app.data.model.Student
 import com.vidyavahini.app.data.repository.FirebaseRepository
 import com.vidyavahini.app.databinding.FragmentRegisterBinding
+import com.vidyavahini.app.viewmodel.ProfileViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * RegisterFragment — first-time profile setup.
  * Loads available routes from Firebase, lets the student pick their boarding stop,
  * then saves the profile and navigates to HomeFragment.
  */
+@AndroidEntryPoint
 class RegisterFragment : Fragment() {
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
 
-    private val repository = FirebaseRepository()
+    private val viewModel: ProfileViewModel by viewModels()
+
+    @Inject
+    lateinit var repository: FirebaseRepository
 
     // Local state: maps route display names → route IDs
     private val routeIdMap  = mutableMapOf<String, String>()   // "Pune → Nashik" → "route_pune_nashik"
@@ -52,7 +60,7 @@ class RegisterFragment : Fragment() {
         repository.getAllRoutes { routes ->
             binding.progressBar.visibility = View.GONE
             if (routes.isEmpty()) {
-                repository.seedDummyRoutes {
+                repository.seedRoutesIfEmpty {
                     loadRoutes() // Retry after seeding
                 }
                 return@getAllRoutes

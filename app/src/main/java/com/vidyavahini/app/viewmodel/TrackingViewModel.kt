@@ -9,14 +9,20 @@ import com.vidyavahini.app.data.model.Route
 import com.vidyavahini.app.data.repository.FirebaseRepository
 import com.vidyavahini.app.utils.ETACalculator
 
+import com.vidyavahini.app.data.repository.RouteRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
 /**
  * ViewModel shared by HomeFragment and TrackingFragment.
  * Manages real-time ping listeners and ETA computation.
  * Automatically cleans up listeners in onCleared() to prevent memory leaks.
  */
-class TrackingViewModel : ViewModel() {
-
-    private val repo = FirebaseRepository()
+@HiltViewModel
+class TrackingViewModel @Inject constructor(
+    private val repo: FirebaseRepository,
+    private val routeRepository: RouteRepository
+) : ViewModel() {
 
     /** Latest bus ping — updates every time a student pings on this route. */
     val latestPing    = MutableLiveData<BusPing>()

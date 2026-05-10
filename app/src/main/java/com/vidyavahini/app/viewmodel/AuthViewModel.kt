@@ -10,16 +10,20 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import java.util.concurrent.TimeUnit
 
+import androidx.lifecycle.viewModelScope
+import com.vidyavahini.app.data.repository.AuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
 /**
- * ViewModel for the authentication flow (Login → OTP → Register).
- * Wraps Firebase Phone Auth so Fragments stay clean and lifecycle-safe.
- *
- * authState values:
- *   "otp_sent"    — OTP SMS was dispatched, show OTP screen
- *   "verified"    — Sign-in succeeded, navigate to home
- *   "error: ..."  — Show error message to user
+ * ViewModel for the authentication flow.
+ * Professional Grade: Uses AuthRepository and viewModelScope with Coroutines.
  */
-class AuthViewModel : ViewModel() {
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+) : ViewModel() {
 
     private val auth = FirebaseAuth.getInstance()
 
@@ -31,6 +35,50 @@ class AuthViewModel : ViewModel() {
 
     // Internal: stored so verifyOtp() can construct the credential
     private var verificationId: String = ""
+
+    // ── Email/Password Auth ──────────────────────────────────────────────────
+
+    /**
+     * Signs in a user with email and password.
+     */
+    fun signIn(email: String, pass: String) {
+        if (email.isEmpty() || pass.isEmpty()) {
+            authState.value = "error: Please enter email and password"
+            return
+        }
+        isLoading.value = true
+        viewModelScope.launch {
+            try {
+                authRepository.signIn(email, pass)
+                authState.postValue("verified")
+            } catch (e: Exception) {
+                authState.postValue("error: ${e.message}")
+            } finally {
+                isLoading.postValue(false)
+            }
+        }
+    }
+
+    /**
+     * Registers a new user with email and password.
+     */
+    fun signUp(email: String, pass: String) {
+        if (email.isEmpty() || pass.isEmpty()) {
+            authState.value = "error: Please enter email and password"
+            return
+        }
+        isLoading.value = true
+        viewModelScope.launch {
+            try {
+                authRepository.signUp(email, pass)
+                authState.postValue("verified")
+            } catch (e: Exception) {
+                authState.postValue("error: ${e.message}")
+            } finally {
+                isLoading.postValue(false)
+            }
+        }
+    }
 
     // ── OTP Request ──────────────────────────────────────────────────────────
 
@@ -102,10 +150,10 @@ class AuthViewModel : ViewModel() {
     }
 
     /** True if the user is already authenticated (used by MainActivity for routing). */
-    fun isLoggedIn(): Boolean = auth.currentUser != null
+    fun isLoggedIn(): Boolean = authRepository.getCurrentUser() != null
 
     /** Signs the user out — called from Settings or profile screen. */
     fun signOut() {
-        auth.signOut()
+        authRepository.signOut()
     }
 }
