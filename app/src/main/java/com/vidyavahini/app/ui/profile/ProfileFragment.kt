@@ -41,9 +41,12 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         prefs = requireContext().getSharedPreferences("vidya", Context.MODE_PRIVATE)
-        loadProfileData()
+        loadProfileData() // Load local first for instant UI
         setupUI()
         observeViewModel()
+        
+        // Sync with Cloud
+        viewModel.loadProfile()
     }
 
     private fun loadProfileData() {
@@ -59,6 +62,7 @@ class ProfileFragment : Fragment() {
 
         // Set avatar initial
         binding.tvAvatarInitial.text = name.firstOrNull()?.uppercaseChar()?.toString() ?: "S"
+        binding.tvContributionScore.text = prefs.getInt("contributionPoints", 0).toString()
 
         // Dark mode toggle
         val isDark = prefs.getBoolean("darkMode", false)
@@ -84,20 +88,29 @@ class ProfileFragment : Fragment() {
                 Toast.makeText(requireContext(), "Name cannot be empty", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            
+            // Show loading
+            binding.btnSaveProfile.isEnabled = false
+            binding.btnSaveProfile.text = "Saving..."
+
+            // Preserve existing data (like fcmToken) from currentStudent
+            val current = viewModel.currentStudent.value
+            val student = Student(
+                name = newName,
+                college = prefs.getString("college", current?.college ?: "") ?: "",
+                routeId = prefs.getString("routeId", current?.routeId ?: "") ?: "",
+                stopId  = prefs.getString("stopId", current?.stopId ?: "") ?: "",
+                parentPhone = newPhone,
+                fcmToken = current?.fcmToken ?: "",
+                profileComplete = true
+            )
+            
+            // Save to local prefs immediately
             prefs.edit().putString("name", newName).putString("parentPhone", newPhone).apply()
             binding.tvProfileName.text = newName
             binding.tvAvatarInitial.text = newName.firstOrNull()?.uppercaseChar()?.toString() ?: "S"
 
-            val student = Student(
-                name = newName,
-                college = prefs.getString("college", "") ?: "",
-                routeId = prefs.getString("routeId", "") ?: "",
-                stopId  = prefs.getString("stopId", "") ?: "",
-                parentPhone = newPhone,
-                profileComplete = true
-            )
             viewModel.saveProfile(student)
-            Snackbar.make(binding.root, "✅ Profile updated!", Snackbar.LENGTH_SHORT).show()
         }
 
         // Switch route
@@ -105,25 +118,36 @@ class ProfileFragment : Fragment() {
             val routes = viewModel.routes.value
             if (routes.isNullOrEmpty()) {
                 Snackbar.make(binding.root, "Loading routes…", Snackbar.LENGTH_SHORT).show()
+                viewModel.loadRoutes()
                 return@setOnClickListener
             }
-            val ids   = routes.keys.toList()
-            val names = routes.values.map { it.name }.toTypedArray()
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Switch Route")
-                .setItems(names) { _, idx ->
-                    val newId   = ids[idx]
-                    val route   = routes[newId]!!
-                    val first   = route.stops.entries.minByOrNull { it.value.order }
+            
+            val bottomSheet = RouteBottomSheetFragment(routes, object : RouteBottomSheetFragment.RouteSelectionListener {
+                override fun onRouteSelected(routeId: String, routeName: String, stopId: String, stopName: String, stopOrder: Int, college: String) {
+                    val current = viewModel.currentStudent.value
+                    val student = Student(
+                        name = prefs.getString("name", "Student") ?: "Student",
+                        college = college,
+                        routeId = routeId,
+                        stopId  = stopId,
+                        parentPhone = prefs.getString("parentPhone", "") ?: "",
+                        fcmToken = current?.fcmToken ?: "",
+                        profileComplete = true
+                    )
+
                     prefs.edit()
-                        .putString("routeId", newId)
-                        .putString("stopId", first?.key ?: "")
-                        .putInt("stopOrder", first?.value?.order ?: 1)
-                        .putString("college", route.college)
+                        .putString("routeId", routeId)
+                        .putString("stopId", stopId)
+                        .putInt("stopOrder", stopOrder)
+                        .putString("college", college)
                         .apply()
-                    binding.tvCollege.text = route.name
-                    Snackbar.make(binding.root, "Route switched to ${route.name}", Snackbar.LENGTH_LONG).show()
-                }.show()
+                        
+                    binding.tvCollege.text = routeName
+                    viewModel.saveProfile(student)
+                    Snackbar.make(binding.root, "Route switched to $routeName", Snackbar.LENGTH_LONG).show()
+                }
+            })
+            bottomSheet.show(childFragmentManager, "RouteSelection")
         }
 
         // Sign out
@@ -161,8 +185,42 @@ class ProfileFragment : Fragment() {
     }
 
     private fun observeViewModel() {
+        viewModel.currentStudent.observe(viewLifecycleOwner) { student ->
+            if (student == null) return@observe
+            
+            // Update UI and Prefs from Cloud data
+            binding.tvProfileName.text = student.name
+            binding.etEditName.setText(student.name)
+            binding.etParentPhone.setText(student.parentPhone)
+            binding.tvAvatarInitial.text = student.name.firstOrNull()?.uppercaseChar()?.toString() ?: "S"
+            binding.tvContributionScore.text = student.contributionPoints.toString()
+            
+            // Sync prefs
+            prefs.edit()
+                .putString("name", student.name)
+                .putString("parentPhone", student.parentPhone)
+                .putString("college", student.college)
+                .putString("routeId", student.routeId)
+                .putString("stopId", student.stopId)
+                .putInt("contributionPoints", student.contributionPoints)
+                .apply()
+        }
+
         viewModel.profileSaved.observe(viewLifecycleOwner) { saved ->
-            if (saved) Snackbar.make(binding.root, "Profile saved to cloud!", Snackbar.LENGTH_SHORT).show()
+            if (saved) {
+                Snackbar.make(binding.root, "✅ Profile saved to cloud!", Snackbar.LENGTH_SHORT).show()
+                binding.btnSaveProfile.isEnabled = true
+                binding.btnSaveProfile.text = "Save Profile"
+                viewModel.profileSaved.value = false // reset
+            }
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { err ->
+            if (err != null) {
+                Snackbar.make(binding.root, "❌ Error: $err", Snackbar.LENGTH_LONG).show()
+                binding.btnSaveProfile.isEnabled = true
+                binding.btnSaveProfile.text = "Save Profile"
+            }
         }
     }
 

@@ -16,6 +16,7 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
 
     val routes = MutableLiveData<Map<String, Route>>()
+    val currentStudent = MutableLiveData<Student?>()
     val isLoading = MutableLiveData<Boolean>(false)
     val profileSaved = MutableLiveData<Boolean>(false)
     val error = MutableLiveData<String>()
@@ -25,6 +26,20 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 routes.postValue(firebaseRepository.getAllRoutesAsync())
+            } catch (e: Exception) {
+                error.postValue(e.message)
+            } finally {
+                isLoading.postValue(false)
+            }
+        }
+    }
+
+    fun loadProfile() {
+        isLoading.value = true
+        viewModelScope.launch {
+            try {
+                val student = firebaseRepository.getStudent()
+                currentStudent.postValue(student)
             } catch (e: Exception) {
                 error.postValue(e.message)
             } finally {

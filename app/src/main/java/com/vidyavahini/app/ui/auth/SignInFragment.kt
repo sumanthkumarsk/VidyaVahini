@@ -58,14 +58,18 @@ class SignInFragment : Fragment() {
         viewModel.authState.observe(viewLifecycleOwner) { state ->
             when {
                 state == "verified" -> {
-                    // Check if profile is set up
-                    val prefs      = requireContext().getSharedPreferences("vidya", Context.MODE_PRIVATE)
-                    val hasProfile = !prefs.getString("name", null).isNullOrEmpty()
-                    if (hasProfile) {
-                        findNavController().navigate(R.id.action_signIn_to_home)
-                    } else {
-                        findNavController().navigate(R.id.action_signIn_to_home) // setup will be checked in MainActivity
+                    val auth = com.google.firebase.auth.FirebaseAuth.getInstance()
+                    if (auth.currentUser?.isEmailVerified == false) {
+                        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                            .setTitle("Verify your email")
+                            .setMessage("Please verify your Gmail address to continue using VidyaVahini.")
+                            .setPositiveButton("I've Verified") { _, _ -> viewModel.checkEmailVerification() }
+                            .setNegativeButton("Resend") { _, _ -> viewModel.resendVerificationEmail() }
+                            .show()
+                        return@observe
                     }
+                    
+                    findNavController().navigate(R.id.action_signIn_to_home)
                 }
                 state.startsWith("error") -> {
                     val raw = state.removePrefix("error: ")

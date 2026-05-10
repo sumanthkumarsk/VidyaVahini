@@ -59,9 +59,9 @@
                     android:id="@+id/chipDemoMode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="DEMO"
+                    android:text="LIVE"
                     android:visibility="gone"
-                    app:chipBackgroundColor="@color/accent_amber"
+                    app:chipBackgroundColor="@color/success"
                     app:chipCornerRadius="12dp" />
             </LinearLayout>
 
@@ -115,6 +115,28 @@
                         android:textColor="@color/primary_blue"
                         android:textSize="22sp"
                         android:textStyle="bold" />
+
+                    <!-- Journey Progress -->
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/progressJourney"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:visibility="gone"
+                        app:trackColor="#F0F4FF"
+                        app:indicatorColor="@color/primary_blue"
+                        app:trackThickness="8dp"
+                        app:trackCornerRadius="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvProgressLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Bus is on the way..."
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp"
+                        android:visibility="gone" />
 
                     <!-- Demo pulse indicator -->
                     <TextView
@@ -280,7 +302,8 @@
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:text="▶ Start Demo"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <!-- ── Stop Demo button (hidden by default) ──────────── -->
@@ -293,6 +316,83 @@
                 android:text="⏹ Stop Demo Simulation"
                 android:textSize="13sp"
                 android:visibility="gone" />
+
+            <!-- ── Community Live Feed ─────────────────────────────── -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/VidyaCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="COMMUNITY FEED"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.12" />
+
+                    <!-- Input Section -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center_vertical">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/VidyaTextInput"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Share traffic/crowd status..."
+                            app:hintTextAppearance="@style/TextAppearance.Material3.LabelSmall">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etUpdateMessage"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingVertical="8dp"
+                                android:textSize="13sp"
+                                android:inputType="textShortMessage"
+                                android:imeOptions="actionSend" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnPostUpdate"
+                            style="@style/Widget.Material3.Button.IconButton.Filled"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginStart="8dp"
+                            app:icon="@android:drawable/ic_menu_send" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvUpdates"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:nestedScrollingEnabled="false" />
+
+                    <TextView
+                        android:id="@+id/tvNoUpdates"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="No community updates yet. Be the first!"
+                        android:textColor="@color/text_hint"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- ── Route Stats Card ──────────────────────────────── -->
             <com.google.android.material.card.MaterialCardView

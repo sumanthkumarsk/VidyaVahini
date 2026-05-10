@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.vidyavahini.app.R
 import com.vidyavahini.app.data.model.Student
@@ -16,6 +17,7 @@ import com.vidyavahini.app.data.repository.FirebaseRepository
 import com.vidyavahini.app.databinding.FragmentRegisterBinding
 import com.vidyavahini.app.viewmodel.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -130,20 +132,26 @@ class RegisterFragment : Fragment() {
             )
 
             // Save to Firebase
-            repository.saveStudent(student)
+            viewLifecycleOwner.lifecycleScope.launch {
+                try {
+                    repository.saveStudent(student)
 
-            // Save to SharedPreferences for quick offline access
-            requireContext().getSharedPreferences("vidya", Context.MODE_PRIVATE)
-                .edit()
-                .putString("name",        name)
-                .putString("routeId",     selectedRouteId)
-                .putString("stopId",      selectedStopId)
-                .putString("parentPhone", student.parentPhone)
-                .putInt("stopOrder",      stopOrder)
-                .apply()
+                    // Save to SharedPreferences for quick offline access
+                    requireContext().getSharedPreferences("vidya", Context.MODE_PRIVATE)
+                        .edit()
+                        .putString("name",        name)
+                        .putString("routeId",     selectedRouteId)
+                        .putString("stopId",      selectedStopId)
+                        .putString("parentPhone", student.parentPhone)
+                        .putInt("stopOrder",      stopOrder)
+                        .apply()
 
-            Toast.makeText(requireContext(), "Welcome, $name! 🎉", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.action_register_to_home)
+                    Toast.makeText(requireContext(), "Welcome, $name! 🎉", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_register_to_home)
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), "Error saving profile: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

@@ -95,27 +95,43 @@ class TrackingFragment : Fragment(), OnMapReadyCallback {
             val map  = googleMap ?: return@observe
             val stop = viewModel.currentRoute.value?.stops?.get(ping.stopId) ?: return@observe
 
-            // Smoothly move bus marker to the latest pinged stop
-            busMarker?.remove()
-            busMarker = map.addMarker(
-                MarkerOptions()
-                    .position(LatLng(stop.lat, stop.lng))
-                    .title("🚌 Bus here: ${stop.name}")
-                    .snippet("Stop ${stop.order} of ${viewModel.currentRoute.value?.stops?.size}")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                    .zIndex(3f)
-            )
+            val busLatLng = LatLng(stop.lat, stop.lng)
+            
+            // Update or add bus marker
+            if (busMarker == null) {
+                busMarker = map.addMarker(
+                    MarkerOptions()
+                        .position(busLatLng)
+                        .title("🚌 Bus here: ${stop.name}")
+                        .snippet("Stop ${stop.order} of ${viewModel.currentRoute.value?.stops?.size}")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))
+                        .zIndex(5f) // Higher Z-index to stay on top
+                )
+            } else {
+                busMarker?.position = busLatLng
+                busMarker?.title = "🚌 Bus here: ${stop.name}"
+            }
             busMarker?.showInfoWindow()
             binding.tvLastPing.text = "Bus at: ${stop.name}"
 
-            // Auto-zoom to show bus + student's stop
+            // Smoothly pan to bus + student's stop
             val myStop = viewModel.currentRoute.value?.stops?.get(myStopId)
             if (myStop != null) {
-                val bounds = LatLngBounds.Builder()
-                    .include(LatLng(stop.lat, stop.lng))
-                    .include(LatLng(myStop.lat, myStop.lng))
-                    .build()
-                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
+                try {
+                    val builder = LatLngBounds.Builder()
+                        .include(busLatLng)
+                        .include(LatLng(myStop.lat, myStop.lng))
+                    val bounds = builder.build()
+                    
+                    // Add padding to avoid degenerate bounds issue
+                    if (busLatLng.latitude == myStop.lat && busLatLng.longitude == myStop.lng) {
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(busLatLng, 15f))
+                    } else {
+                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
+                    }
+                } catch (e: Exception) {
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(busLatLng, 15f))
+                }
             }
         }
 
@@ -229,11 +245,23 @@ class TrackingFragment : Fragment(), OnMapReadyCallback {
     private fun centerCameraOnRoute(map: GoogleMap, route: Route) {
         val stops = route.stops.values.toList()
         if (stops.isEmpty()) return
+        
         val builder = LatLngBounds.Builder()
         stops.forEach { builder.include(LatLng(it.lat, it.lng)) }
+        
         try {
-            map.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 150))
-        } catch (_: Exception) {}
+            val bounds = builder.build()
+            // If northeast and southwest are the same, newLatLngBounds will throw an error
+            if (bounds.northeast == bounds.southwest) {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(bounds.center, 15f))
+            } else {
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 150))
+            }
+        } catch (e: Exception) {
+            // Fallback for empty or invalid bounds
+            val firstStop = stops[0]
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(firstStop.lat, firstStop.lng), 14f))
+        }
     }
 
     override fun onDestroyView() {

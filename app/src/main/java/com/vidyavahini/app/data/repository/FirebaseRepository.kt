@@ -8,6 +8,7 @@ import com.google.firebase.database.ValueEventListener
 import com.vidyavahini.app.data.model.Breakdown
 import com.vidyavahini.app.data.model.BusPing
 import com.vidyavahini.app.data.model.Route
+import com.vidyavahini.app.data.model.RouteUpdate
 import com.vidyavahini.app.data.model.Stop
 import com.vidyavahini.app.data.model.Student
 import kotlinx.coroutines.tasks.await
@@ -122,20 +123,26 @@ class FirebaseRepository @Inject constructor(
     }
 
     // ── Student ──────────────────────────────────────────────────────────────
-
-    fun saveStudent(student: Student) {
+    
+    suspend fun saveStudent(student: Student) {
         val uid = auth.currentUser?.uid ?: return
-        db.child("students").child(uid).setValue(student)
-            .addOnFailureListener { e -> android.util.Log.e("FirebaseRepo", "Error saving student", e) }
+        try {
+            db.child("students").child(uid).setValue(student).await()
+        } catch (e: Exception) {
+            android.util.Log.e("FirebaseRepo", "Error saving student", e)
+            throw e
+        }
     }
 
-    fun getStudent(onResult: (Student?) -> Unit) {
-        val uid = auth.currentUser?.uid ?: return onResult(null)
-        db.child("students").child(uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snap: DataSnapshot) { onResult(snap.getValue(Student::class.java)) }
-                override fun onCancelled(e: DatabaseError) { onResult(null) }
-            })
+    suspend fun getStudent(): Student? {
+        val uid = auth.currentUser?.uid ?: return null
+        return try {
+            val snapshot = db.child("students").child(uid).get().await()
+            snapshot.getValue(Student::class.java)
+        } catch (e: Exception) {
+            android.util.Log.e("FirebaseRepo", "Error fetching student", e)
+            null
+        }
     }
 
     // ── Route ────────────────────────────────────────────────────────────────
@@ -199,6 +206,20 @@ class FirebaseRepository @Inject constructor(
             status    = "on_time"
         )
         db.child("pings").child(routeId).child("latest").setValue(ping)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful && uid != "demo_user") {
+                    // Reward the student: +5 points for contributing live data
+                    db.child("students").child(uid).child("contributionPoints")
+                        .runTransaction(object : com.google.firebase.database.Transaction.Handler {
+                            override fun doTransaction(data: com.google.firebase.database.MutableData): com.google.firebase.database.Transaction.Result {
+                                val current = data.getValue(Int::class.java) ?: 0
+                                data.value = current + 5
+                                return com.google.firebase.database.Transaction.success(data)
+                            }
+                            override fun onComplete(e: com.google.firebase.database.DatabaseError?, b: Boolean, s: com.google.firebase.database.DataSnapshot?) {}
+                        })
+                }
+            }
             .addOnFailureListener { e -> android.util.Log.e("FirebaseRepo", "Ping error", e) }
     }
 
@@ -263,5 +284,46 @@ class FirebaseRepository @Inject constructor(
                 "reached"     to true
             )
         )
+    }
+
+    // ── Community Updates ────────────────────────────────────────────────────
+
+    fun postRouteUpdate(routeId: String, studentName: String, message: String) {
+        if (routeId.isEmpty()) return
+        val ref = db.child("updates").child(routeId).push()
+        val update = RouteUpdate(
+            id = ref.key ?: "",
+            studentName = studentName,
+            message = message,
+            timestamp = System.currentTimeMillis()
+        )
+        ref.setValue(update)
+            .addOnFailureListener { e -> android.util.Log.e("FirebaseRepo", "Post failed", e) }
+    }
+
+    fun listenForRouteUpdates(routeId: String, onUpdate: (List<RouteUpdate>) -> Unit): ValueEventListener {
+        val listener = object : ValueEventListener {
+            override fun onDataChange(snap: DataSnapshot) {
+                val list = mutableListOf<RouteUpdate>()
+                if (snap.exists()) {
+                    for (child in snap.children) {
+                        try {
+                            val update = child.getValue(RouteUpdate::class.java)
+                            if (update != null) list.add(update)
+                        } catch (e: Exception) {
+                            android.util.Log.e("FirebaseRepo", "Serialization error", e)
+                        }
+                    }
+                }
+                onUpdate(list.sortedByDescending { it.timestamp }.take(10))
+            }
+            override fun onCancelled(e: DatabaseError) {}
+        }
+        db.child("updates").child(routeId).addValueEventListener(listener)
+        return listener
+    }
+
+    fun removeRouteUpdatesListener(routeId: String, listener: ValueEventListener) {
+        db.child("updates").child(routeId).removeEventListener(listener)
     }
 }

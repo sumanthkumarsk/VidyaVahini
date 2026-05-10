@@ -59,9 +59,6 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Registers a new user with email and password.
-     */
     fun signUp(email: String, pass: String) {
         if (email.isEmpty() || pass.isEmpty()) {
             authState.value = "error: Please enter email and password"
@@ -71,11 +68,35 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 authRepository.signUp(email, pass)
-                authState.postValue("verified")
+                // Send verification email immediately after signup
+                auth.currentUser?.sendEmailVerification()
+                authState.postValue("unverified_email")
             } catch (e: Exception) {
                 authState.postValue("error: ${e.message}")
             } finally {
                 isLoading.postValue(false)
+            }
+        }
+    }
+
+    /**
+     * Re-sends the verification email to the current user.
+     */
+    fun resendVerificationEmail() {
+        auth.currentUser?.sendEmailVerification()
+            ?.addOnSuccessListener { authState.postValue("email_sent") }
+            ?.addOnFailureListener { e -> authState.postValue("error: ${e.message}") }
+    }
+
+    /**
+     * Refreshes the user state to check if email has been verified.
+     */
+    fun checkEmailVerification() {
+        auth.currentUser?.reload()?.addOnCompleteListener {
+            if (auth.currentUser?.isEmailVerified == true) {
+                authState.postValue("verified")
+            } else {
+                authState.postValue("error: Email not verified yet. Please check your inbox.")
             }
         }
     }

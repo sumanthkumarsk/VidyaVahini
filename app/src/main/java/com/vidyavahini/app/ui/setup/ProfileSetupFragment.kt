@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.vidyavahini.app.R
 import com.vidyavahini.app.data.model.Student
 import com.vidyavahini.app.databinding.FragmentProfileSetupBinding
+import com.vidyavahini.app.ui.profile.RouteBottomSheetFragment
 import com.vidyavahini.app.viewmodel.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,11 +28,10 @@ class ProfileSetupFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: ProfileViewModel by viewModels()
 
-    // Map from route name (displayed) → route ID (stored)
-    private var routeNameToId = mapOf<String, String>()
-    // Map from stop name → stop ID (for the selected route)
-    private var stopNameToId  = mapOf<String, String>()
-    private var stopNameToOrder = mapOf<String, Int>()
+    // Selection storage
+    private var selectedRouteId: String? = null
+    private var selectedStopId: String? = null
+    private var selectedStopOrder: Int = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -53,27 +53,27 @@ class ProfileSetupFragment : Fragment() {
         viewModel.routes.observe(viewLifecycleOwner) { routeMap ->
             if (routeMap.isEmpty()) return@observe
 
-            routeNameToId = routeMap.entries.associate { it.value.name to it.key }
-            val routeNames = routeMap.values.map { it.name }
-
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, routeNames)
-            binding.dropdownRoute.setAdapter(adapter)
-
-            // When a route is selected, populate the stops dropdown
-            binding.dropdownRoute.setOnItemClickListener { _, _, position, _ ->
-                val selectedRouteName = routeNames[position]
-                val selectedRouteId   = routeNameToId[selectedRouteName] ?: return@setOnItemClickListener
-                val selectedRoute     = routeMap[selectedRouteId] ?: return@setOnItemClickListener
-                val sortedStops       = selectedRoute.stops.entries.sortedBy { it.value.order }
-
-                stopNameToId    = sortedStops.associate { "${it.value.order}. ${it.value.name}" to it.key }
-                stopNameToOrder = sortedStops.associate { "${it.value.order}. ${it.value.name}" to it.value.order }
-
-                val stopNames = sortedStops.map { "${it.value.order}. ${it.value.name}" }
-                val stopAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, stopNames)
-                binding.dropdownStop.setAdapter(stopAdapter)
-                binding.dropdownStop.text?.clear()
+            val openSelection = {
+                val bottomSheet = RouteBottomSheetFragment(routeMap, object : RouteBottomSheetFragment.RouteSelectionListener {
+                    override fun onRouteSelected(routeId: String, routeName: String, stopId: String, stopName: String, stopOrder: Int, college: String) {
+                        selectedRouteId = routeId
+                        selectedStopId = stopId
+                        selectedStopOrder = stopOrder
+                        
+                        binding.dropdownRoute.setText(routeName, false)
+                        binding.dropdownStop.setText("$stopOrder. $stopName", false)
+                        
+                        // Auto-fill college if not set
+                        if (binding.dropdownCollege.text.isNullOrEmpty()) {
+                            binding.dropdownCollege.setText(college, false)
+                        }
+                    }
+                })
+                bottomSheet.show(childFragmentManager, "RouteSelection")
             }
+
+            binding.dropdownRoute.setOnClickListener { openSelection() }
+            binding.dropdownStop.setOnClickListener { openSelection() }
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { loading ->
@@ -125,9 +125,9 @@ class ProfileSetupFragment : Fragment() {
 
             binding.tilName.error = null
 
-            val routeId   = routeNameToId[routeName] ?: ""
-            val stopId    = stopNameToId[stopLabel] ?: ""
-            val stopOrder = stopNameToOrder[stopLabel] ?: 1
+            val routeId   = selectedRouteId ?: ""
+            val stopId    = selectedStopId ?: ""
+            val stopOrder = selectedStopOrder
 
             // Save locally for offline access + fast startup
             requireContext().getSharedPreferences("vidya", Context.MODE_PRIVATE).edit()

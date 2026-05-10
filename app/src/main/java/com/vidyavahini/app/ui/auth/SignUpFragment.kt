@@ -57,6 +57,18 @@ class SignUpFragment : Fragment() {
 
         viewModel.authState.observe(viewLifecycleOwner) { state ->
             when {
+                state == "unverified_email" -> {
+                    com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                        .setTitle("Verify your email")
+                        .setMessage("A verification link has been sent to your Gmail. Please verify to continue.")
+                        .setPositiveButton("I've Verified") { _, _ -> viewModel.checkEmailVerification() }
+                        .setNegativeButton("Resend") { _, _ -> viewModel.resendVerificationEmail() }
+                        .setCancelable(false)
+                        .show()
+                }
+                state == "email_sent" -> {
+                    Toast.makeText(requireContext(), "Verification email resent!", Toast.LENGTH_SHORT).show()
+                }
                 state == "verified" -> findNavController().navigate(R.id.action_signUp_to_profileSetup)
                 state.startsWith("error") -> {
                     val raw = state.removePrefix("error: ")
@@ -64,7 +76,7 @@ class SignUpFragment : Fragment() {
                         raw.contains("already in use")  -> "An account with this email already exists."
                         raw.contains("badly formatted") -> "Please enter a valid email address."
                         raw.contains("network")         -> "No internet connection."
-                        else                            -> "Sign-up failed. Please try again."
+                        else                            -> raw
                     }
                     Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
                 }

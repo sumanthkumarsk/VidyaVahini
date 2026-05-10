@@ -11,5 +11,6 @@ data class Student(
     val stopId: String = "",
     val parentPhone: String = "",
     val fcmToken: String = "",
+    val contributionPoints: Int = 0,
     val profileComplete: Boolean = false
 )
