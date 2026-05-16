@@ -121,6 +121,7 @@ class ProfileSetupFragment : Fragment() {
                 college.isEmpty()  -> { Toast.makeText(requireContext(), "Please select your college", Toast.LENGTH_SHORT).show(); return@setOnClickListener }
                 routeName.isEmpty() -> { Toast.makeText(requireContext(), "Please select your bus route", Toast.LENGTH_SHORT).show(); return@setOnClickListener }
                 stopLabel.isEmpty() -> { Toast.makeText(requireContext(), "Please select your boarding stop", Toast.LENGTH_SHORT).show(); return@setOnClickListener }
+                parentPhone.isNotEmpty() && parentPhone.length != 10 -> { Toast.makeText(requireContext(), "Parent phone must be 10 digits", Toast.LENGTH_SHORT).show(); return@setOnClickListener }
             }
 
             binding.tilName.error = null
@@ -129,6 +130,8 @@ class ProfileSetupFragment : Fragment() {
             val stopId    = selectedStopId ?: ""
             val stopOrder = selectedStopOrder
 
+            val formattedParentPhone = if (parentPhone.isEmpty()) "" else "+91$parentPhone"
+
             // Save locally for offline access + fast startup
             requireContext().getSharedPreferences("vidya", Context.MODE_PRIVATE).edit()
                 .putString("name", name)
@@ -136,7 +139,7 @@ class ProfileSetupFragment : Fragment() {
                 .putString("routeId", routeId)
                 .putString("stopId", stopId)
                 .putInt("stopOrder", stopOrder)
-                .putString("parentPhone", parentPhone)
+                .putString("parentPhone", formattedParentPhone)
                 .apply()
 
             val student = Student(
@@ -144,7 +147,7 @@ class ProfileSetupFragment : Fragment() {
                 college         = college,
                 routeId         = routeId,
                 stopId          = stopId,
-                parentPhone     = parentPhone,
+                parentPhone     = formattedParentPhone,
                 profileComplete = true
             )
             viewModel.saveProfile(student)

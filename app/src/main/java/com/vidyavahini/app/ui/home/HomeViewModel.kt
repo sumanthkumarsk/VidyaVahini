@@ -89,7 +89,10 @@ class HomeViewModel @Inject constructor(
 
     fun postUpdate(name: String, message: String) {
         if (message.isBlank()) return
-        repo.postRouteUpdate(activeRouteId, name, message)
+        val routeId = if (activeRouteId.isNotEmpty()) activeRouteId else currentRoute.value?.routeNumber?.lowercase() ?: ""
+        if (routeId.isNotEmpty()) {
+            repo.postRouteUpdate(routeId, name, message)
+        }
     }
 
     /**

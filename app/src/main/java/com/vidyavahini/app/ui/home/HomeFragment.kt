@@ -40,6 +40,32 @@ class HomeFragment : Fragment() {
     private var stopOrder = 1
     private var isPingCooldown = false
     private var cooldownTimer: CountDownTimer? = null
+    
+    // Community Feed Adapter
+    private val feedUpdates = mutableListOf<RouteUpdate>()
+    private val feedAdapter by lazy {
+        object : RecyclerView.Adapter<UpdateViewHolder>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UpdateViewHolder {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_route_update, parent, false)
+                return UpdateViewHolder(view)
+            }
+
+            override fun onBindViewHolder(holder: UpdateViewHolder, position: Int) {
+                val item = feedUpdates[position]
+                holder.author.text = item.studentName
+                holder.message.text = item.message
+                
+                val diff = System.currentTimeMillis() - item.timestamp
+                holder.time.text = when {
+                    diff < 60_000 -> "Just now"
+                    diff < 3600_000 -> "${diff / 60_000}m ago"
+                    else -> "${diff / 3600_000}h ago"
+                }
+            }
+
+            override fun getItemCount() = feedUpdates.size
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -99,9 +125,6 @@ class HomeFragment : Fragment() {
         }
 
         // Demo button removed from UI, automated instead
-
-
-
     }
 
     private fun triggerPing() {
@@ -140,6 +163,7 @@ class HomeFragment : Fragment() {
 
     private fun setupFeedActions() {
         binding.rvUpdates.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvUpdates.adapter = feedAdapter
         
         binding.btnPostUpdate.setOnClickListener { postCurrentUpdate() }
         
@@ -156,14 +180,31 @@ class HomeFragment : Fragment() {
         if (msg.isNotEmpty()) {
             val prefs = requireContext().getSharedPreferences("vidya", Context.MODE_PRIVATE)
             val name  = prefs.getString("name", "Student") ?: "Student"
-            viewModel.postUpdate(name, msg)
+            
+            // Local Echo: Add to list immediately for testing UI
+            val localUpdate = RouteUpdate(
+                id = "local_" + System.currentTimeMillis(),
+                studentName = name,
+                message = msg,
+                timestamp = System.currentTimeMillis()
+            )
+            
+            // Add at top
+            feedUpdates.add(0, localUpdate)
+            if (feedUpdates.size > 3) feedUpdates.removeAt(3)
+            
+            binding.tvNoUpdates.visibility = View.GONE
+            binding.rvUpdates.visibility = View.VISIBLE
+            feedAdapter.notifyDataSetChanged()
+            binding.rvUpdates.scrollToPosition(0)
+
+            // Clear UI
             binding.etUpdateMessage.text?.clear()
-            
-            Snackbar.make(binding.root, "Update shared with community", Snackbar.LENGTH_SHORT).show()
-            
-            // Hide keyboard
             val imm = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
             imm.hideSoftInputFromWindow(binding.etUpdateMessage.windowToken, 0)
+            
+            viewModel.postUpdate(name, msg)
+            Snackbar.make(binding.root, "Update shared with community", Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -224,10 +265,21 @@ class HomeFragment : Fragment() {
             if (updates.isNullOrEmpty()) {
                 binding.tvNoUpdates.visibility = View.VISIBLE
                 binding.rvUpdates.visibility = View.GONE
+                feedUpdates.clear()
+                feedAdapter.notifyDataSetChanged()
             } else {
                 binding.tvNoUpdates.visibility = View.GONE
                 binding.rvUpdates.visibility = View.VISIBLE
-                updateFeedAdapter(updates)
+                
+                feedUpdates.clear()
+                feedUpdates.addAll(updates)
+                feedAdapter.notifyDataSetChanged()
+                
+                // Force a layout pass and scroll to newest
+                binding.rvUpdates.post {
+                    binding.rvUpdates.requestLayout()
+                    binding.rvUpdates.scrollToPosition(0)
+                }
             }
         }
 
@@ -269,31 +321,6 @@ class HomeFragment : Fragment() {
         if (routeId.isEmpty()) routeId = "route_401d"
         viewModel.loadRoute(routeId)
         viewModel.startListening(routeId, stopOrder)
-    }
-
-    private fun updateFeedAdapter(updates: List<RouteUpdate>) {
-        val adapter = object : RecyclerView.Adapter<UpdateViewHolder>() {
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UpdateViewHolder {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_route_update, parent, false)
-                return UpdateViewHolder(view)
-            }
-
-            override fun onBindViewHolder(holder: UpdateViewHolder, position: Int) {
-                val item = updates[position]
-                holder.author.text = item.studentName
-                holder.message.text = item.message
-                
-                val diff = System.currentTimeMillis() - item.timestamp
-                holder.time.text = when {
-                    diff < 60_000 -> "Just now"
-                    diff < 3600_000 -> "${diff / 60_000}m ago"
-                    else -> "${diff / 3600_000}h ago"
-                }
-            }
-
-            override fun getItemCount() = updates.size
-        }
-        binding.rvUpdates.adapter = adapter
     }
 
     class UpdateViewHolder(view: View) : RecyclerView.ViewHolder(view) {

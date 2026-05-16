@@ -315,10 +315,14 @@ class FirebaseRepository @Inject constructor(
                         }
                     }
                 }
-                onUpdate(list.sortedByDescending { it.timestamp }.take(10))
+                // Sort descending to show newest at top, then take 3
+                // We do sorting in Kotlin to avoid dependency on Firebase indexing rules
+                val sorted = list.sortedByDescending { it.timestamp }.take(3)
+                onUpdate(sorted)
             }
             override fun onCancelled(e: DatabaseError) {}
         }
+        // Listen to all updates and filter in Kotlin for better reliability
         db.child("updates").child(routeId).addValueEventListener(listener)
         return listener
     }

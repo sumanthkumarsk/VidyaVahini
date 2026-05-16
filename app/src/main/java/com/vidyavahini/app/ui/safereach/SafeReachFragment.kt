@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -114,16 +115,30 @@ class SafeReachFragment : Fragment() {
      */
     private fun sendSmsToParent(phone: String, name: String) {
         try {
-            val msg = "✅ $name has safely reached college. — Vidya-Vahini App"
-            val smsManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // Use plain text for maximum carrier compatibility
+            val msg = "Vidya-Vahini: $name has safely reached college."
+            
+            // Normalize phone number (ensure +91 for India if not present)
+            val formattedPhone = when {
+                phone.startsWith("+") -> phone
+                phone.length == 10 -> "+91$phone"
+                else -> phone // fallback to raw
+            }
+
+            val smsManager: SmsManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 requireContext().getSystemService(SmsManager::class.java)
             } else {
                 @Suppress("DEPRECATION")
                 SmsManager.getDefault()
             }
-            smsManager.sendTextMessage(phone, null, msg, null, null)
+            
+            smsManager.sendTextMessage(formattedPhone, null, msg, null, null)
+            
+            // Helpful feedback since SMS happens in background
+            Toast.makeText(requireContext(), "SMS sent to parents", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
-            // SMS failed — FCM was already sent as the primary method
+            android.util.Log.e("SafeReach", "SMS failed", e)
+            Toast.makeText(requireContext(), "SMS failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
         }
     }
 
